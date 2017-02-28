@@ -1,0 +1,24 @@
+{
+  "name": "news_release",
+  "version": "0.0.1",
+  "description": "新闻发布系统",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Xwatson/newsRelease.git"
+  },
+  "keywords": [
+    "news",
+    "koa2",
+    "mysql"
+  ],
+  "author": "xwatson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Xwatson/newsRelease/issues"
+  },
+  "homepage": "https://github.com/Xwatson/newsRelease#readme"
+}
