@@ -23,7 +23,12 @@
   },
   "homepage": "https://github.com/Xwatson/newsRelease#readme",
   "dependencies": {
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.23.0",
+    "babel-preset-es2017": "^6.22.0",
     "babel-register": "^6.23.0",
+    "debug": "^2.6.1",
+    "ejs": "^2.5.6",
+    "fs-promise": "^2.0.0",
     "http": "0.0.0",
     "koa": "^2.0.1",
     "koa-better-body": "^3.0.2",
@@ -38,9 +43,8 @@
     "koa-session2": "^2.2.2",
     "koa-static": "^3.0.0",
     "koa-views": "^6.0.0",
-    "path": "^0.12.7"
-  },
-  "devDependencies": {
-    "nodemon": "^1.11.0"
+    "nodemon": "^1.11.0",
+    "path": "^0.12.7",
+    "runkoa": "^1.5.9"
   }
 }
