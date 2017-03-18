@@ -1,6 +1,6 @@
 "use strict";
 const Sequelize = require('sequelize');
-const databaseConfig = require("../config/database.json");
+const databaseConfig = require("../../config/database.json");
 // var match = process.env.DATABASE_URL.match(/postgres:\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)/);
 // const sequelize = new Sequelize(match[5], match[1], match[2], {
 //   dialect:  'postgres',
