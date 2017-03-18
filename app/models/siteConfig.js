@@ -8,6 +8,7 @@ const Sequelize = require('sequelize')
 const siteConfig = sequelize.define('xj_siteConfig', {
         id: {
             type: Sequelize.INTEGER,
+            primaryKey: true,
             autoIncrement: true,
             allowNull: false,
             unique: true
