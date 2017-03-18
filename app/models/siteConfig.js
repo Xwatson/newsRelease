@@ -20,7 +20,7 @@ const siteConfig = sequelize.define('xj_siteConfig', {
             type: Sequelize.STRING,
             allowNull: false
         },
-        keyWords: { // 网站标题
+        keyWords: { // 网站关键字
             type: Sequelize.STRING,
             allowNull: false
         },
@@ -35,7 +35,7 @@ const siteConfig = sequelize.define('xj_siteConfig', {
             allowNull: false,
             values: ['ACTIVE', 'MAINTAIN', 'CLOSE'] // 状态：激活，维护，关闭
         },
-        isClose: { // 关闭时显示的文字
+        message: { // 维护信息
             type: Sequelize.STRING
         }
     }
