@@ -17,6 +17,7 @@ const admin = sequelize.define('xj_admin', {
         adminName: { // 用户名
             type: Sequelize.STRING,
             unique: true,
+            primaryKey: true,
             allowNull: false
         },
         email: { // 邮箱
