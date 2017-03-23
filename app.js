@@ -19,7 +19,7 @@ app.use(convert(require('koa-static')(__dirname + '/public')))
 app.use(async (req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', 'localhost:3001') // 允许跨域
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST')
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,x-access-token')
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,news-access-token')
     next()
 })
 
