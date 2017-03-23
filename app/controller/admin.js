@@ -14,7 +14,6 @@ const token = require('../common/token')
 exports.login = async(ctx) => {
     const bodyData = ctx.body
     const message = {}
-    message.result = false
     const adminInfo = await Admin.getAdminByName(bodyData.name)
     if (!adminInfo) {
         message.code = -1
@@ -37,6 +36,7 @@ exports.login = async(ctx) => {
         adminName:adminInfo.adminName,
         email:adminInfo.email,
         auth:adminInfo.auth_id,
+        expireTime:expires,
         token:token.getToken(adminInfo.id, expires)
     }
     ctx.body = message
