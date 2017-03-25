@@ -20,20 +20,6 @@ const auth = sequelize.define('xj_auth', {
             unique: true,
             allowNull: false
         },
-        menu_id: { // 菜单id
-            type: Sequelize.INTEGER,
-            references: {
-                model:menu,
-                key:'id'
-            }
-        },
-        operation_id: { // 操作项id
-            type: Sequelize.INTEGER,
-            references: {
-                model:operation,
-                key:'id'
-            }
-        },
         status: { // 状态
             type: Sequelize.ENUM,
             allowNull: false,
@@ -41,6 +27,12 @@ const auth = sequelize.define('xj_auth', {
         }
     }
 )
+// 一个auth对多个menu
+auth.hasMany(menu)
+menu.belongsTo(auth)
+// 一个auth对多个operation
+auth.hasMany(operation)
+operation.belongsTo(auth)
 
 auth.sync() // 创建表
 

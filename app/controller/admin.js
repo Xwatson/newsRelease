@@ -28,7 +28,7 @@ exports.login = async(ctx) => {
         return ctx
     }
     // 过期时间
-    var expires = moment().add(7,'days').valueOf()
+    const expires = moment().add(7,'days').valueOf()
     message.code = 1
     message.message = '登录成功'
     message.data = {

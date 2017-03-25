@@ -18,13 +18,6 @@ const comment = sequelize.define('xj_comment', {
             type: Sequelize.STRING,
             allowNull: false
         },
-        user_id: { // 用户
-            type: Sequelize.INTEGER,
-            references: {
-                model:user,
-                key:'id'
-            }
-        },
         content: { // 内容
             type: Sequelize.STRING,
             allowNull: false
@@ -36,6 +29,9 @@ const comment = sequelize.define('xj_comment', {
         }
     }
 )
+// 一个comment对多个user
+comment.hasMany(user)
+user.belongsTo(comment)
 
 comment.sync() // 创建表
 

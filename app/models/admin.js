@@ -28,13 +28,6 @@ const admin = sequelize.define('xj_admin', {
             type: Sequelize.STRING,
             allowNull: false
         },
-        auth_id: { // 权限
-            type: Sequelize.INTEGER,
-            references: {
-                model:auth,
-                key:'id'
-            }
-        },
         status: { // 状态
             type: Sequelize.ENUM,
             allowNull: false,
@@ -42,6 +35,9 @@ const admin = sequelize.define('xj_admin', {
         }
     }
 )
+// 一个admin对多个auth
+admin.hasMany(auth)
+auth.belongsTo(admin)
 
 admin.sync() // 创建表
 

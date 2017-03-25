@@ -30,7 +30,9 @@ const news = sequelize.define('xj_news', {
             type: Sequelize.INTEGER,
             references: {
                 model:category,
-                key:'id'
+                key:'id',
+                // 强制使用外键约束，仅适用于 PostgreSQL
+                deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
             }
         },
         content: { // 内容
@@ -63,6 +65,9 @@ const news = sequelize.define('xj_news', {
         }
     }
 )
+// 一个news对多个category
+news.hasMany(category)
+category.belongsTo(news)
 
 news.sync() // 创建表
 
