@@ -3,7 +3,9 @@
  */
 import home from './home'
 import admin from './admin'
-const routes = [home, admin]
+import verify from './verify'
+
+const routes = [home, verify, admin]
 export default (app) => {
     routes.forEach((route) => {
         app

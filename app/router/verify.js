@@ -5,8 +5,8 @@ const token = require('../common/token')
 import Router from 'koa-router'
 const router = new Router()
 
-router.get('/service/*', token.verifyToken)
-router.post('/service/*', token.verifyToken)
+router.get('/news_service/*', token.verifyToken)
+router.post('/news_service/*', token.verifyToken)
 
 export default router
 

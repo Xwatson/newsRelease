@@ -12,16 +12,16 @@ const token = require('../common/token')
  * @returns ctx
  */
 exports.login = async(ctx) => {
-    const bodyData = ctx.body
+    const data = ctx.body
     const message = {}
-    const adminInfo = await Admin.getAdminByName(bodyData.name)
+    const adminInfo = await Admin.getAdminByName(data.name)
     if (!adminInfo) {
         message.code = -1
         message.message = '账户不存在'
         ctx.body = message
         return ctx
     }
-    if (bodyData.password !== encipher.getMd5(adminInfo.password)) {
+    if (data.password !== encipher.getMd5(adminInfo.password)) {
         message.code = -1
         message.message = '密码错误'
         ctx.body = message
@@ -41,4 +41,43 @@ exports.login = async(ctx) => {
     }
     ctx.body = message
     return ctx
+}
+/**
+ * 创建用户
+ * @param ctx
+ * @returns {Promise.<void>}
+ */
+exports.create = async(ctx) => {
+    const data = ctx.body
+    const message = {}
+    try {
+        let adminInfo = await Admin.getAdminByName(data.name)
+        if (adminInfo) {
+            message.code = -1
+            message.message = '账户已存在'
+        }
+        adminInfo = await Admin.getAdminByEmail(data.email)
+        if (adminInfo) {
+            message.code = -1
+            message.message = '邮箱已被注册'
+        }
+        const _admin = {
+            adminName:data.name,
+            email:data.email,
+            password:data.password,
+            status:data.status
+        }
+        await Admin.createAdmin(_admin)
+        // 获取创建成功用户
+        adminInfo = await Admin.getAdminByEmail(data.email)
+        if (adminInfo) {
+            message.code = 1
+            message.message = '注册成功'
+            message.data = adminInfo
+        }
+        ctx.body = message
+    }catch (err) {
+        console.log(err)
+        throw (err)
+    }
 }
