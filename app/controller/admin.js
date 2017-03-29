@@ -70,6 +70,7 @@ exports.create = async(ctx) => {
         await Admin.createAdmin(_admin)
         // 获取创建成功用户
         adminInfo = await Admin.getAdminByEmail(data.email)
+        // 权限
         if (adminInfo) {
             message.code = 1
             message.message = '注册成功'

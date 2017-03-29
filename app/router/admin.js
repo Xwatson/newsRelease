@@ -6,6 +6,7 @@ import Router from 'koa-router'
 const router = new Router()
 
 router.post('/login', admin.login)
+router.post('/news_service/admin/create', admin.create)
 
 export default router
 
