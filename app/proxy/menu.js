@@ -5,6 +5,14 @@ const sequelize = require("../models/sequelize")
 const Menu = require('../models/menu')
 
 /**
+ * 根据Id获取菜单
+ * @param menu
+ * @returns {Promise.<menu>}
+ */
+exports.create = async(menu) => {
+    return await Menu.create(menu)
+}
+/**
  * 添加菜单
  * @param menu
  * @returns {Promise.<menu>}

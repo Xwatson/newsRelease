@@ -19,7 +19,9 @@ const operation = sequelize.define('xj_operation', {
             allowNull: false
         },
         type: { // 类型
-            type: Sequelize.STRING
+            type: Sequelize.ENUM,
+            allowNull: false,
+            values: ['CREATE', 'DELETE', 'UPDATE', 'SELECT', 'REVIEW'] // 增、删、改、查、审核
         },
         status: { // 状态
             type: Sequelize.ENUM,
