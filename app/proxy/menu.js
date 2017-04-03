@@ -5,12 +5,28 @@ const sequelize = require("../models/sequelize")
 const Menu = require('../models/menu')
 
 /**
- * 根据Id获取菜单
- * @param menu
+ * 获取所有
+ * @param id
+ * @param where
  * @returns {Promise.<menu>}
  */
-exports.create = async(menu) => {
-    return await Menu.create(menu)
+exports.getMenus= async(where) => {
+    return await Menu.findAll(where)
+}/**
+ * 根据Id获取菜单
+ * @param id
+ * @returns {Promise.<menu>}
+ */
+exports.getMenuById = async(id) => {
+    return await Menu.findOne({ where:{ id:id } })
+}
+/**
+ * 根据name获取菜单
+ * @param name
+ * @returns {Promise.<menu>}
+ */
+exports.getMenuByName = async(name) => {
+    return await Menu.findOne({ where:{ name:name } })
 }
 /**
  * 添加菜单
@@ -23,21 +39,11 @@ exports.create = async(menu) => {
 /**
  * 更新菜单
  * @param menu
+ * @param id
  * @returns {Promise}
  */
-exports.update = async(menu) => {
-    return await Menu.update({
-        name: menu.name,
-        router: menu.router,
-        icon: menu.icon,
-        // sort:menu.sort, // 不更新排序
-        parent_id: menu.parent_id,
-        status: menu.status,
-    }, {
-        where: {
-            id: menu.id
-        }
-    })
+exports.update = async(menu, id) => {
+    return await Menu.update(menu, { where:{ id:id } })
 }
 /**
  * 排序
@@ -66,11 +72,30 @@ exports.sort = async(current, exchange) => {
  */
 exports.stickTop = async(menu) => {
     try {
-        return await Menu.max('sort').then((sort) => {
-            return Menu.update({sort: sort + 1}, {where: {id: menu.id}})
+        return await Menu.max('sort', { where:menu.parent_id }).then((menu) => {
+            return Menu.update({sort: menu.sort + 1}, {where: {id: menu.id}})
         })
     } catch (err) {
         console.log(err)
         throw err
     }
+}
+/**
+ * 获取最大值
+ * @param field
+ * @param where
+ * @returns {Promise.<void>}
+ */
+exports.max = async(field, where) => {
+    return await Menu.max(field, where)
+}
+/**
+ * 删除
+ * @param id
+ * @returns {Promise.<void>}
+ */
+exports.delete = async(id) => {
+    return await Menu.destroy({
+        where:{ id: id }
+    })
 }

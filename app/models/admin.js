@@ -35,9 +35,9 @@ const admin = sequelize.define('xj_admin', {
         }
     }
 )
-// 一个admin对多个auth
-admin.hasMany(auth)
-auth.belongsTo(admin)
+// 一个admin对一个auth
+admin.hasOne(auth, {foreignKey:'admin_id', targetKey:'id', as:'admin'})
+auth.belongsTo(admin, {foreignKey:'admin_id'})
 
 admin.sync() // 创建表
 

@@ -13,6 +13,12 @@ const operation = sequelize.define('xj_operation', {
             allowNull: false,
             unique: true
         },
+        authId:{
+            type: Sequelize.INTEGER,
+            field: 'auth_id',
+            allowNull: false,
+            comment:'权限Id'
+        },
         name: { // 操作名称
             type: Sequelize.STRING,
             unique: true,
@@ -28,6 +34,12 @@ const operation = sequelize.define('xj_operation', {
             allowNull: false,
             values: ['ENABLED', 'DISABLED'] // 状态：启用，禁用
         }
+    }, {
+        indexes: [{
+            name: 'authOperation_auth_id',
+            method: 'BTREE',
+            fields: ['auth_id']
+        }]
     }
 )
 

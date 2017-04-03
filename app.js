@@ -5,29 +5,38 @@ import convert from 'koa-convert'
 import json from 'koa-json'
 import onerror from 'koa-onerror'
 import Bodyparser from 'koa-bodyparser'
-const bodyparser = Bodyparser()
+import body from 'koa-better-body'
+import path from 'path'
 import logger from 'koa-logger'
 import router from './app/router'
 
 onerror(app)
 
 // middlewares
-app.use(convert(bodyparser))
+app.use(convert(Bodyparser()))
 app.use(convert(json()))
 app.use(convert(logger()))
 app.use(convert(require('koa-static')(__dirname + '/public')))
-app.use(async (req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', 'localhost:3001') // 允许跨域
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST')
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,news-access-token')
-    next()
-})
 
 // 设置Header，这个header会输出给浏览器客户端，表明这个框架是什么生成的，可以自行修改
 app.use(async(ctx, next) => {
-    await next()
+    ctx.set('Access-Control-Allow-Origin', 'localhost:3001') // 允许跨域
+    ctx.set('Access-Control-Allow-Methods', 'GET, POST')
+    ctx.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, authToken')
     ctx.set('X-Powered-By', 'Koa2')
+    return await next()
 })
+// body解析
+app.use(convert(body({
+    multipart: true,
+    strict: false,
+    jsonLimit: '20mb',
+    formLimit: '10mb',
+    textLimit: '20mb',
+    formidable: {
+        uploadDir: path.join(__dirname, './app/uploads')
+    }
+})))
 
 app.use(views(__dirname + '/app/views', {
   extension: 'ejs'
@@ -49,14 +58,8 @@ app.use(async(ctx) => {
     }
 })
 
-app.use(async(ctx) => {
-    if (ctx.status === 404) {
-        await ctx.render('./error/404');
-    }
-})
-
 app.on('error', function(err, ctx){
-  logger.error('server error', err, ctx)
+  console.log('server error', err, ctx)
 })
 
 

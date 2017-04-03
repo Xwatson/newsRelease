@@ -19,8 +19,7 @@ const menu = sequelize.define('xj_menu', {
             allowNull: false
         },
         router: { // 路由
-            type: Sequelize.STRING,
-            allowNull: false
+            type: Sequelize.STRING
         },
         icon: { // 图标
             type: Sequelize.STRING
@@ -29,7 +28,8 @@ const menu = sequelize.define('xj_menu', {
             type: Sequelize.INTEGER
         },
         parent_id:{ // 上级id
-            type: Sequelize.INTEGER
+            type: Sequelize.INTEGER,
+            defaultValue:0
         },
         status: { // 状态
             type: Sequelize.ENUM,

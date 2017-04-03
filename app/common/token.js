@@ -11,7 +11,7 @@ const responseCode = require('../common/responseCode')
  * @param expires 时效
  * @returns {String}
  */
-module.exports.getToken = (_iss, expires) => {
+exports.getToken = (_iss, expires) => {
     return jwt.encode({
         iss: _iss,
         exp: expires
@@ -24,33 +24,30 @@ module.exports.getToken = (_iss, expires) => {
  * @param res
  * @param next
  */
-module.exports.verifyToken = function (req,res,next) {
+exports.verifyToken = async(ctx, next) => {
+    console.log('验证token ', ctx.request)
     const message = {}
-    const token = (req.body && req.body.access_token) || (req.query && req.query.access_token) || req.headers['news-access-token']
+    const token = (ctx.body && ctx.body.authToken) || (ctx.query && ctx.query.authToken) || ctx.headers['authToken']
     if (token) {
         try {
             var decoded = jwt.decode(token, jwtTokenSecret)
             if (decoded.exp <= Date.now()) {
                 message.code = responseCode.AUTH_EXPIRED
                 message.message = '登录超时'
-                res.body = message
-                res.end()
-                return
+                ctx.body = message
+                return ctx
             }
-            req.uid=decoded.iss
+            req.uid = decoded.iss
         } catch (err) {
             message.code = responseCode.AUTH_EXPIRED
             message.message = '登录超时'
-            res.body = message
-            res.end()
-            return
+            ctx.body = message
         }
         next()
     } else {
         message.code = responseCode.AUTH_EXPIRED
         message.message = '登录超时'
-        res.body = message
-        res.end()
-        return
+        ctx.body = message
+        return ctx
     }
 }
