@@ -61,7 +61,7 @@ exports.list = async(ctx) => {
  * @returns {Promise.<void>}
  */
 exports.create = async(ctx) => {
-    const data = ctx.body
+    const data = ctx.request.body
     const message = {}
     try {
         let operation = await Operation.getOperationByName(data.name)
