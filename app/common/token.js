@@ -25,23 +25,24 @@ exports.getToken = (_iss, expires) => {
  * @param next
  */
 exports.verifyToken = async(ctx, next) => {
-    console.log('验证token ', ctx.request)
+    const data = ctx.request.body
     const message = {}
-    const token = (ctx.body && ctx.body.authToken) || (ctx.query && ctx.query.authToken) || ctx.headers['authToken']
+    const token = (data && data.authToken) || (ctx.query && ctx.query.authToken) || ctx.headers['authToken']
     if (token) {
         try {
-            var decoded = jwt.decode(token, jwtTokenSecret)
+            const decoded = jwt.decode(token, jwtTokenSecret)
             if (decoded.exp <= Date.now()) {
                 message.code = responseCode.AUTH_EXPIRED
                 message.message = '登录超时'
                 ctx.body = message
                 return ctx
             }
-            req.uid = decoded.iss
+            ctx.uid = decoded.iss
         } catch (err) {
             message.code = responseCode.AUTH_EXPIRED
             message.message = '登录超时'
             ctx.body = message
+            return ctx
         }
         next()
     } else {
