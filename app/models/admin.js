@@ -14,6 +14,11 @@ const admin = sequelize.define('xj_admin', {
             allowNull: false,
             unique: true
         },
+        authId:{
+            type: Sequelize.INTEGER,
+            field: 'authId',
+            comment:'权限Id'
+        },
         adminName: { // 用户名
             type: Sequelize.STRING,
             unique: true,
@@ -33,11 +38,17 @@ const admin = sequelize.define('xj_admin', {
             allowNull: false,
             values: ['ENABLED', 'DISABLED'] // 状态：启用，禁用
         }
+    }, {
+        indexes: [{
+            name: 'adminAuth_admin_id',
+            method: 'BTREE',
+            fields: ['authId']
+        }]
     }
 )
-// 一个admin对一个auth
-admin.hasOne(auth, {foreignKey:'admin_id', targetKey:'id', as:'admin'})
-auth.belongsTo(admin, {foreignKey:'admin_id'})
+// 一个auth对一个admin
+auth.hasOne(admin, {foreignKey:'authId', targetKey:'id', as:'admin'})
+// auth.belongsTo(admin, {foreignKey:'admin_id'})
 
 admin.sync() // 创建表
 

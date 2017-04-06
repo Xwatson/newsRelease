@@ -14,10 +14,11 @@ const auth = sequelize.define('xj_auth', {
             allowNull: false,
             unique: true
         },
-        adminId:{
+        operationId:{
             type: Sequelize.INTEGER,
-            field: 'admin_id',
-            comment:'管理员Id'
+            field: 'operation_id',
+            allowNull: false,
+            comment:'操作项Id'
         },
         name: { // 权限名称
             type: Sequelize.STRING,
@@ -37,9 +38,9 @@ const auth = sequelize.define('xj_auth', {
         }
     }, {
         indexes: [{
-            name: 'adminAuth_admin_id',
+            name: 'authOperation_auth_id',
             method: 'BTREE',
-            fields: ['admin_id']
+            fields: ['operation_id']
         }]
     }
 )
@@ -48,8 +49,8 @@ const auth = sequelize.define('xj_auth', {
 menu.belongsTo(auth)*/
 
 // 一个auth对多个operation
-auth.hasMany(operation, {foreignKey:'auth_id', targetKey:'id', as:'operation'})
-operation.belongsTo(auth, {foreignKey:'auth_id'})
+// auth.hasMany(operation, {foreignKey:'auth_id', targetKey:'id', as:'operation'})
+operation.belongsTo(auth, {foreignKey:'operation_id', targetKey:'id', as:'auth'})
 
 auth.sync() // 创建表
 
