@@ -17,7 +17,6 @@ const auth = sequelize.define('xj_auth', {
         adminId:{
             type: Sequelize.INTEGER,
             field: 'admin_id',
-            allowNull: false,
             comment:'管理员Id'
         },
         name: { // 权限名称

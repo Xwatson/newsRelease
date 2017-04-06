@@ -16,7 +16,6 @@ const operation = sequelize.define('xj_operation', {
         authId:{
             type: Sequelize.INTEGER,
             field: 'auth_id',
-            allowNull: false,
             comment:'权限Id'
         },
         name: { // 操作名称
