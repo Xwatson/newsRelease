@@ -68,18 +68,20 @@ exports.create = async(ctx) => {
         if (operation) {
             message.code = responseCode.FAIL
             message.message = '操作项已存在'
-        } else {
-            operation = await Operation.create({ name:data.name, type:data.type, status:data.status })
-            if (operation) {
-                operation = await Operation.getOperationByName(data.name)
-                message.code = responseCode.SUCCESS
-                message.message = '创建成功'
-                message.data = operation
-            } else {
-                message.code = responseCode.FAIL
-                message.message = '创建失败'
-            }
+            ctx.body = message
+            return ctx
         }
+        operation = await Operation.create({ name:data.name, type:data.type, status:data.status })
+        if (!operation) {
+            message.code = responseCode.FAIL
+            message.message = '创建失败'
+            ctx.body = message
+            return ctx
+        }
+        operation = await Operation.getOperationByName(data.name)
+        message.code = responseCode.SUCCESS
+        message.message = '创建成功'
+        message.data = operation.dataValues
         ctx.body = message
         return ctx
     } catch (err) {
