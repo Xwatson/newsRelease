@@ -5,8 +5,6 @@ import convert from 'koa-convert'
 import json from 'koa-json'
 import onerror from 'koa-onerror'
 import Bodyparser from 'koa-bodyparser'
-import body from 'koa-better-body'
-import path from 'path'
 import logger from 'koa-logger'
 import router from './app/router'
 
@@ -26,17 +24,6 @@ app.use(async(ctx, next) => {
     ctx.set('X-Powered-By', 'Koa2')
     return await next()
 })
-// body解析
-app.use(convert(body({
-    multipart: true,
-    strict: false,
-    jsonLimit: '20mb',
-    formLimit: '10mb',
-    textLimit: '20mb',
-    formidable: {
-        uploadDir: path.join(__dirname, './app/uploads')
-    }
-})))
 
 app.use(views(__dirname + '/app/views', {
   extension: 'ejs'
