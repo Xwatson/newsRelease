@@ -4,6 +4,7 @@
  */
 const sequelize = require("./sequelize.js")
 const Sequelize = require('sequelize')
+const Auth = require('./auth')
 
 const operation = sequelize.define('xj_operation', {
         id: {
@@ -30,6 +31,10 @@ const operation = sequelize.define('xj_operation', {
         }
     }
 )
+// 多个operation对多个auth
+operation.belongsToMany(Auth, { through: 'xj_auth', as:'AuthOperation' })
+// 多个auth对多个operation
+Auth.belongsToMany(operation, { through: 'xj_auth', as:'AuthOperation' })
 
 operation.sync() // 创建表
 

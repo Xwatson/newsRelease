@@ -4,7 +4,6 @@
  */
 const sequelize = require("./sequelize.js")
 const Sequelize = require('sequelize')
-const auth = require('./auth')
 
 const admin = sequelize.define('xj_admin', {
         id: {
@@ -46,9 +45,6 @@ const admin = sequelize.define('xj_admin', {
         }]
     }
 )
-// 一个auth对一个admin
-auth.hasOne(admin, {foreignKey:'authId', targetKey:'id', as:'admin'})
-// auth.belongsTo(admin, {foreignKey:'admin_id'})
 
 admin.sync() // 创建表
 
