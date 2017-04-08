@@ -12,7 +12,7 @@ const errLog = '操作项控制器：'
  * @returns {Promise.<void>}
  */
 exports.get = async(ctx) => {
-    const data = ctx.body
+    const data = ctx.query.body
     const message = {}
     try {
         const operation = await Operation.getOperationById(data.id)
@@ -37,7 +37,7 @@ exports.get = async(ctx) => {
  * @returns {Promise.<void>}
  */
 exports.list = async(ctx) => {
-    const data = ctx.request.body
+    const data = ctx.query.body
     if (!data.page) data.page = 1
     if (!data.size) data.size = 10
     const message = {}
@@ -51,7 +51,6 @@ exports.list = async(ctx) => {
             message.code = responseCode.FAIL
             message.message = '获取失败'
         }
-        console.log('啊啊', message)
         ctx.body = message
         return ctx
     } catch (err) {
@@ -98,7 +97,7 @@ exports.create = async(ctx) => {
  * @returns {Promise.<void>}
  */
 exports.update = async(ctx) => {
-    const data = ctx.body
+    const data = ctx.request.body
     const message = {}
     try {
         if (data.id) {
@@ -133,7 +132,7 @@ exports.update = async(ctx) => {
  * @returns {Promise.<void>}
  */
 exports.delete = async(ctx) => {
-    const data = ctx.body
+    const data = ctx.request.body
     const message = {}
     try {
         const authOperation = await Auth.getOperationById(data.id)
