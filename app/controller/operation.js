@@ -26,9 +26,9 @@ exports.get = async(ctx) => {
         }
         ctx.body = message
         return ctx
-    } catch (err) {
-        console.log(`${errLog}获取出错：`, err)
-        throw err
+    }catch (err) {
+       console.log(`${errLog}获取出错：`, err)
+          throw err
     }
 }
 /**
