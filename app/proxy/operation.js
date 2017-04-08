@@ -2,7 +2,6 @@
  * Created by xwatson on 2017/3/30.
  */
 const Operation = require('../models/operation')
-const Auth = require('../models/auth')
 /**
  * 根据Id查询
  * @param id
@@ -23,9 +22,11 @@ exports.getOperationByName = async(name) => {
  * 获取所有数据
  * @returns {Promise.<menu>}
  */
-exports.getOperations = async() => {
-    return await Operation.findAll({
-        'include': [Auth]
+exports.getOperations = async(page, size) => {
+    return await Operation.findAndCountAll({
+        where:{},
+        offset:page,
+        limit:size
     })
 }
 /**

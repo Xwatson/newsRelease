@@ -25,7 +25,7 @@ exports.getToken = (_iss, expires) => {
  * @param next
  */
 exports.verifyToken = async(ctx, next) => {
-    next()
+    await next()
     return
     const data = ctx.request.body
     const message = {}
@@ -46,7 +46,7 @@ exports.verifyToken = async(ctx, next) => {
             ctx.body = message
             return ctx
         }
-        next()
+        await next()
     } else {
         message.code = responseCode.AUTH_EXPIRED
         message.message = '登录超时'

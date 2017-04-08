@@ -15,7 +15,7 @@ exports.get = async(ctx) => {
     const data = ctx.body
     const message = {}
     try {
-        const operation = Operation.getOperationById(data.id)
+        const operation = await Operation.getOperationById(data.id)
         if (operation) {
             message.code = responseCode.SUCCESS
             message.message = '获取成功'
@@ -37,11 +37,13 @@ exports.get = async(ctx) => {
  * @returns {Promise.<void>}
  */
 exports.list = async(ctx) => {
-    const data = ctx.body
+    const data = ctx.request.body
+    if (!data.page) data.page = 1
+    if (!data.size) data.size = 10
     const message = {}
     try {
-        const operations = Operation.getOperations()
-        if (!operations) {
+        const operations = await Operation.getOperations(data.page - 1, data.size)
+        if (operations) {
             message.code = responseCode.SUCCESS
             message.message = '获取成功'
             message.data = operations
@@ -49,6 +51,7 @@ exports.list = async(ctx) => {
             message.code = responseCode.FAIL
             message.message = '获取失败'
         }
+        console.log('啊啊', message)
         ctx.body = message
         return ctx
     } catch (err) {
