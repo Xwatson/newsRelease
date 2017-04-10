@@ -4,6 +4,7 @@
  */
 const sequelize = require("./sequelize.js")
 const Sequelize = require('sequelize')
+const News = require('../models/news')
 
 const category = sequelize.define('xj_category', {
         id: {
@@ -19,7 +20,8 @@ const category = sequelize.define('xj_category', {
             allowNull: false
         },
         parent_id: { // 上级分类
-            type: Sequelize.INTEGER
+            type: Sequelize.INTEGER,
+            defaultValue:0
         },
         is_nav: { // 是否导航
             type: Sequelize.BOOLEAN
@@ -34,6 +36,8 @@ const category = sequelize.define('xj_category', {
         }
     }
 )
+// 一个category对一个news
+category.hasMany(News, { foreignKey:'category_id', targetKey:'id', as:'NewsCategory' })
 
 category.sync() // 创建表
 

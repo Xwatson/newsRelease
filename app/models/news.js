@@ -26,14 +26,10 @@ const news = sequelize.define('xj_news', {
             type: Sequelize.STRING,
             allowNull: false
         },
-        category_id: { // 分类
+        categoryId: { // 分类
             type: Sequelize.INTEGER,
-            references: {
-                model:category,
-                key:'id',
-                // 强制使用外键约束，仅适用于 PostgreSQL
-                deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
-            }
+            field: 'category_id',
+            comment:'分类Id'
         },
         content: { // 内容
             type: Sequelize.TEXT,
@@ -63,11 +59,15 @@ const news = sequelize.define('xj_news', {
             allowNull: false,
             values: ['ENABLED', 'DISABLED'] // 状态：启用，禁用
         }
+    },
+    {
+        indexes: [{
+            name: 'newsCategory_news_id',
+            method: 'BTREE',
+            fields: ['category_id']
+        }]
     }
 )
-// 一个news对多个category
-news.hasMany(category)
-category.belongsTo(news)
 
 news.sync() // 创建表
 
