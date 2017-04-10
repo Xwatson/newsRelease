@@ -4,6 +4,7 @@
  */
 const sequelize = require("./sequelize.js")
 const Sequelize = require('sequelize')
+const Comment = require('../models/comment')
 
 const user = sequelize.define('xj_user', {
         id: {
@@ -67,6 +68,9 @@ const user = sequelize.define('xj_user', {
         }
     }
 )
+
+// 一个user对多个comment
+user.hasMany(Comment, { foreignKey:'user_id', targetKey:'id', as:'CommentUser' })
 
 user.sync() // 创建表
 

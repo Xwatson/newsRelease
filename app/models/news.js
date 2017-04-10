@@ -5,6 +5,7 @@
 const sequelize = require("./sequelize.js")
 const Sequelize = require('sequelize')
 const category = require('./category')
+const Comment = require('./comment')
 
 const news = sequelize.define('xj_news', {
         id: {
@@ -68,6 +69,9 @@ const news = sequelize.define('xj_news', {
         }]
     }
 )
+
+// 一个news对多个comment
+news.hasMany(Comment, { foreignKey:'news_id', targetKey:'id', as:'CommentNews' })
 
 news.sync() // 创建表
 

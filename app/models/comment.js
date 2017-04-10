@@ -4,7 +4,6 @@
  */
 const sequelize = require("./sequelize.js")
 const Sequelize = require('sequelize')
-const user = require('./user')
 
 const comment = sequelize.define('xj_comment', {
         id: {
@@ -13,6 +12,16 @@ const comment = sequelize.define('xj_comment', {
             autoIncrement: true,
             allowNull: false,
             unique: true
+        },
+        userId: { // 用户关联id
+            type: Sequelize.INTEGER,
+            field: 'user_id',
+            comment:'用户Id'
+        },
+        newsId: { // 新闻关联id
+            type: Sequelize.INTEGER,
+            field: 'news_id',
+            comment:'新闻Id'
         },
         title: { // 新闻标题
             type: Sequelize.STRING,
@@ -27,12 +36,21 @@ const comment = sequelize.define('xj_comment', {
             allowNull: false,
             values: ['PASS', 'REJECT'] // 状态：通过，拒绝
         }
+    },
+    {
+        indexes: [
+            {
+                name: 'commentUsers_user_id',
+                method: 'BTREE',
+                fields: ['user_id']
+            },
+            {
+                name: 'commentNews_news_id',
+                method: 'BTREE',
+                fields: ['news_id']
+            }]
     }
 )
-// 一个comment对多个user
-comment.hasMany(user)
-user.belongsTo(comment)
-
 comment.sync() // 创建表
 
 module.exports = comment
