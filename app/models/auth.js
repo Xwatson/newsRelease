@@ -28,7 +28,7 @@ const auth = sequelize.define('xj_auth', {
 )
 
 // 一个auth对一个admin
-auth.hasMany(Admin, { foreignKey:'authId', targetKey:'id', as:'AdminAuth' })
+auth.hasMany(Admin, { foreignKey:'auth_id', targetKey:'id', as:'AdminAuth' })
 
 auth.sync() // 创建表
 

@@ -15,7 +15,7 @@ const admin = sequelize.define('xj_admin', {
         },
         authId:{
             type: Sequelize.INTEGER,
-            field: 'authId',
+            field: 'auth_id',
             comment:'权限Id'
         },
         adminName: { // 用户名
