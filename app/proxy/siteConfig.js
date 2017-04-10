@@ -18,3 +18,12 @@ exports.createConfig = async(config) => {
     }
     return await SiteConfig.create(config)
 }
+/**
+ * 更新
+ * @param siteConfig
+ * @param id
+ * @returns {Promise.<void>}
+ */
+exports.updateLinks = async(siteConfig, id) => {
+    return await SiteConfig.update(siteConfig, { where:{ id:id } })
+}
