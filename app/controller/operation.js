@@ -135,6 +135,9 @@ exports.delete = async(ctx) => {
     const data = ctx.request.body
     const message = {}
     try {
+        const aa = await Operation.getOperationById(data.id)
+        const bb = await aa.getAuthOperation()
+        console.log(bb)
         const authOperation = await Auth.getOperationById(data.id)
         if (!authOperation) {
             const operation = await Operation.delete(data.id)
