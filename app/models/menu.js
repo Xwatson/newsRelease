@@ -40,7 +40,7 @@ const menu = sequelize.define('xj_menu', {
     }
 )
 // 多个menu对多个auth
-menu.belongsToMany(Auth, { through: 'xj_auth', as:'AuthMenu' })
+// menu.belongsToMany(Auth, { through: 'xj_auth', as:'AuthMenu' })
 
 menu.sync() // 创建表
 

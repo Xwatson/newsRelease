@@ -41,7 +41,7 @@ const admin = sequelize.define('xj_admin', {
         indexes: [{
             name: 'adminAuth_admin_id',
             method: 'BTREE',
-            fields: ['authId']
+            fields: ['auth_id']
         }]
     }
 )
