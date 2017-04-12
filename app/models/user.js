@@ -70,7 +70,8 @@ const user = sequelize.define('xj_user', {
 )
 
 // 一个user对多个comment
-user.hasMany(Comment, { foreignKey:'user_id', targetKey:'id', as:'CommentUser' })
+user.hasMany(Comment, { foreignKey:'user_id', targetKey:'id', as:'Comment' })
+Comment.belongsTo(user, { as:'User', foreignKey:'user_id' })
 
 user.sync() // 创建表
 

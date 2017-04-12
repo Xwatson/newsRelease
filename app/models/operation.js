@@ -33,9 +33,9 @@ const operation = sequelize.define('xj_operation', {
     }
 )
 // 多个operation对多个auth
-operation.belongsToMany(Auth, { through: AuthOperation, as:'AuthOperation' })
+operation.belongsToMany(Auth, { through: AuthOperation, foreignKey:'operation_id', as:'AuthOperation' })
 // 多个auth对多个operation
-Auth.belongsToMany(operation, { through: AuthOperation, as:'AuthOperation' })
+Auth.belongsToMany(operation, { through: AuthOperation, foreignKey:'auth_id', as:'AuthOperation' })
 
 operation.sync() // 创建表
 

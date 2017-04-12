@@ -71,8 +71,8 @@ const news = sequelize.define('xj_news', {
 )
 
 // 一个news对多个comment
-news.hasMany(Comment, { foreignKey:'news_id', targetKey:'id', as:'CommentNews' })
-
+news.hasMany(Comment, { foreignKey:'news_id', targetKey:'id', as:'Comment' })
+Comment.belongsTo(news, { as:'News', foreignKey:'news_id' })
 news.sync() // 创建表
 
 module.exports = news

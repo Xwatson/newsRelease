@@ -37,7 +37,8 @@ const category = sequelize.define('xj_category', {
     }
 )
 // 一个category对多个news
-category.hasMany(News, { foreignKey:'category_id', targetKey:'id', as:'NewsCategory' })
+category.hasMany(News, { foreignKey:'category_id', targetKey:'id', as:'News' })
+News.belongsTo(category, { as:'Category', foreignKey:'category_id' })
 
 category.sync() // 创建表
 
