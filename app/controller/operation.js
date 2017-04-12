@@ -101,21 +101,24 @@ exports.update = async(ctx) => {
     const message = {}
     try {
         if (data.id) {
-            let operation = await Operation.getOperationByName(data.name)
-            if (operation) {
+            let operation = await Operation.getOperationById(data.id)
+            if (!operation) {
                 message.code = responseCode.FAIL
-                message.message = '操作项已存在'
-            } else {
-                operation = await Operation.update({ name:data.name, type:data.type, status:data.status })
-                if (operation) {
-                    message.code = responseCode.SUCCESS
-                    message.message = '修改成功'
-                    message.data = operation
-                } else {
-                    message.code = responseCode.FAIL
-                    message.message = '修改失败'
-                }
+                message.message = 'id不存在'
+                ctx.body = message
+                return ctx
             }
+            operation = await Operation.update({ name:data.name, type:data.type, status:data.status }, data.id)
+            if (!operation) {
+                message.code = responseCode.FAIL
+                message.message = '修改失败'
+            }
+            operation = await Operation.getOperationById(data.id)
+            message.code = responseCode.SUCCESS
+            message.message = '修改成功'
+            message.data = operation
+            ctx.body = message
+            return ctx
         } else {
             message.code = responseCode.FAIL
             message.message = '未找到id字段'
@@ -135,25 +138,28 @@ exports.delete = async(ctx) => {
     const data = ctx.request.body
     const message = {}
     try {
-        const aa = await Operation.getOperationById(data.id)
-        const bb = await aa.getAuthOperation()
-        console.log(bb)
-        const authOperation = await Auth.getOperationById(data.id)
-        if (!authOperation) {
-            const operation = await Operation.delete(data.id)
-            if (operation) {
-                message.code = responseCode.SUCCESS
-                message.message = '删除成功'
-                message.data = operation
+        const operation = await Operation.getOperationById(data.id)
+        if (operation) {
+            const authOperation = await operation.getAuthOperation()
+            if (!authOperation.length) {
+                const operation = await Operation.delete(data.id)
+                if (operation) {
+                    message.code = responseCode.SUCCESS
+                    message.message = '删除成功'
+                    message.data = operation
+                } else {
+                    message.code = responseCode.FAIL
+                    message.message = '删除失败'
+                }
             } else {
                 message.code = responseCode.FAIL
-                message.message = '删除失败'
+                message.message = '该操作项已被关联'
             }
         } else {
             message.code = responseCode.FAIL
-            message.message = '该操作项已被关联'
+            message.message = 'id不存在'
         }
-        ctx.body = ctx
+        ctx.body = message
         return ctx
     } catch (err) {
         console.log(`${errLog}删除操作项出错：`, err)
