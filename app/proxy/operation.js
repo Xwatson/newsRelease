@@ -8,7 +8,7 @@ const Operation = require('../models/operation')
  * @returns {Promise.<menu>}
  */
 exports.getOperationById = async(id) => {
-    return await Operation.findOne({ where:{ id:id } })
+    return await Operation.findById(id)
 }
 /**
  * 根据名称查询
@@ -51,14 +51,10 @@ exports.create = async(operation) => {
  * @param operation
  * @returns {Promise}
  */
-exports.update = async(operation) => {
-    return await Operation.update({
-        name:operation.name,
-        type:operation.type,
-        status:operation.name
-    }, {
+exports.update = async(operation, id) => {
+    return await Operation.update(operation, {
         where: {
-            id: operation.id
+            id: id
         }
     })
 }
