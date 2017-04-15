@@ -22,9 +22,9 @@ exports.getOperationByName = async(name) => {
  * 获取所有数据
  * @returns {Promise.<menu>}
  */
-exports.getOperations = async(page, size) => {
+exports.getOperations = async(where ,page, size) => {
     return await Operation.findAndCountAll({
-        where:{},
+        where:where,
         offset:page,
         limit:size
     })

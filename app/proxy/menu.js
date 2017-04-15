@@ -8,10 +8,16 @@ const Menu = require('../models/menu')
  * 获取所有
  * @param id
  * @param where
+ * @param page
+ * @param size
  * @returns {Promise.<menu>}
  */
-exports.getMenus= async(where) => {
-    return await Menu.findAll(where)
+exports.getMenus= async(where ,page, size) => {
+    return await Menu.findAndCountAll({
+        where:where,
+        offset:page,
+        limit:size
+    })
 }/**
  * 根据Id获取菜单
  * @param id
