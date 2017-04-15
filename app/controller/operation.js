@@ -12,7 +12,7 @@ const errLog = '操作项控制器：'
  * @returns {Promise.<void>}
  */
 exports.get = async(ctx) => {
-    const data = ctx.query.body
+    const data = ctx.query
     const message = {}
     try {
         const operation = await Operation.getOperationById(data.id)
@@ -37,15 +37,19 @@ exports.get = async(ctx) => {
  * @returns {Promise.<void>}
  */
 exports.list = async(ctx) => {
-    const data = ctx.query.body
+    const data = ctx.query
     if (!data.page) data.page = 1
     if (!data.size) data.size = 10
     const message = {}
     try {
-        const operations = await Operation.getOperations(data.page - 1, data.size)
+        const operations = await Operation.getOperations({}, data.page - 1, data.size)
         if (operations) {
             message.code = responseCode.SUCCESS
             message.message = '获取成功'
+            operations.totalElement = operations.count
+            operations.content = operations.rows
+            delete operations.count
+            delete operations.rows
             message.data = operations
         } else {
             message.code = responseCode.FAIL
