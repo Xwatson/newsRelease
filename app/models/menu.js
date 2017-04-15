@@ -5,6 +5,7 @@
 const sequelize = require("./sequelize.js")
 const Sequelize = require('sequelize')
 const Auth = require('./auth')
+const AuthMenu = require('./authMenu')
 
 const menu = sequelize.define('xj_menu', {
         id: {
@@ -40,7 +41,9 @@ const menu = sequelize.define('xj_menu', {
     }
 )
 // 多个menu对多个auth
-// menu.belongsToMany(Auth, { through: 'xj_auth', as:'AuthMenu' })
+menu.belongsToMany(Auth, { through: AuthMenu, foreignKey:'menu_id', as:'AuthMenu' })
+// 多个auth对多个menu
+Auth.belongsToMany(menu, { through: AuthMenu, foreignKey:'auth_id', as:'AuthMenu' })
 
 menu.sync() // 创建表
 
