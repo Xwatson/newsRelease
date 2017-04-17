@@ -21,11 +21,12 @@ exports.create = async(ctx) => {
             ctx.body = message
             return ctx
         }
+        const max = await Menu.max('sort', { where:{ parent_id:data.parent_id || 0 } })
         menu = await Menu.create({
             name:data.name,
             router:data.router,
             icon:data.icon,
-            sort:Menu.max('sort', { where:{ parent_id:data.parent_id || 0 } }),
+            sort:max || 0,
             parent_id:data.parent_id || 0,
             status:data.status
         })
@@ -59,13 +60,13 @@ exports.update = async(ctx) => {
                 name:data.name,
                 router:data.router,
                 icon:data.icon,
-                // sort:Menu.max('sort', { where:{ parent_id:data.parent_id || 0 } }), 不修改菜单
+                // sort:Menu.max('sort', { where:{ parent_id:data.parent_id || 0 } }), 不修改排序
                 parent_id:data.parent_id || 0
             }, data.id)
             if (meun) {
                 message.code = responseCode.SUCCESS
                 message.message = '修改成功'
-                message.data = meun
+                message.data = await Menu.getMenuById(data.id)
             } else {
                 message.code = responseCode.FAIL
                 message.message = '修改失败'
@@ -87,7 +88,7 @@ exports.update = async(ctx) => {
  * @returns {Promise.<void>}
  */
 exports.delete = async(ctx) => {
-    const data = ctx.body
+    const data = ctx.request.body
     const message = {}
     try {
         if (data.id) {
@@ -151,7 +152,7 @@ exports.get = async(ctx) => {
             message.code = responseCode.FAIL
             message.message = '未找到id字段'
         }
-        ctx.body = ctx
+        ctx.body = message
         return ctx
     } catch (err) {
         console.log(`${errLog}获取菜单出错：`, err)
@@ -182,7 +183,7 @@ exports.list = async(ctx) => {
             message.code = responseCode.FAIL
             message.message = '获取失败'
         }
-        ctx.body = ctx
+        ctx.body = message
         return ctx
     } catch (err) {
         console.log(`${errLog}菜单列表出错：`, err)
