@@ -13,38 +13,20 @@ const errLog = '权限控制器：'
  * @returns {Promise.<void>}
  */
 exports.create = async(ctx) => {
-    const data = ctx.body
+    const data = ctx.request.body
     const message = {}
     try {
         let auth = await Auth.getAuthByName(data.name)
         if (!auth) {
-            const operation = await Operation.getOperationsByWhere({ id:JSON.parse(data.operation_ids) })
-            if (operation) {
-                auth = await Auth.create({
-                    name:data.name,
-                    menu_ids:data.menu_ids,
-                    menu_names:data.menu_names,
-                    status:data.status
-                })
-                if (auth) {
-                    auth = auth.setOperations(operation)
-                    if (auth) {
-                        message.code = responseCode.SUCCESS
-                        message.message = '创建成功'
-                        message.data = auth
-                    } else {
-                        message.code = responseCode.FAIL
-                        message.message = '创建菜单成功，操作项关联失败'
-                    }
-                } else {
-                    message.code = responseCode.FAIL
-                    message.message = '创建失败'
-                }
-            } else {
-                message.code = responseCode.FAIL
-                message.message = '操作项不存在'
-            }
-
+            auth = await Auth.create({
+                name:data.name,
+                menu_ids:data.menu_ids,
+                menu_names:data.menu_names,
+                status:data.status
+            })
+            message.code = responseCode.SUCCESS
+            message.message = '创建成功'
+            message.data = auth
         } else {
             message.code = responseCode.FAIL
             message.message = '菜单名称已存在'

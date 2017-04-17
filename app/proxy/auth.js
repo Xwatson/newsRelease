@@ -3,6 +3,7 @@
  */
 const Auth = require('../models/auth')
 const OperationModal = require('../models/operation')
+const sequelize = require("../models/sequelize")
 
 /**
  * 创建权限
@@ -10,7 +11,15 @@ const OperationModal = require('../models/operation')
  * @returns {Promise.<void>}
  */
 exports.create = async(auth) => {
-    return await Auth.create(auth)
+    // 启动事务
+    return await sequelize.transaction((t) => {
+        return Auth.create(auth, {transaction: t}).then((auth) => {
+            console.log(auth)
+            return auth
+        })
+        .then(t.rollback.bind(t))
+        .catch(t.rollback.bind(t))
+    })
 }
 /**
  * 根据操作项id获取操作关联
@@ -18,7 +27,7 @@ exports.create = async(auth) => {
  * @returns {Promise.<void>}
  */
 exports.getOperationById = async(id) => {
-    return await Auth.getOperations({ where:{ id:id } }, {
+    return await Auth.getOperations({where: {id: id}}, {
         'include': [OperationModal]
     })
 }
@@ -28,17 +37,15 @@ exports.getOperationById = async(id) => {
  * @returns {Promise.<void>}
  */
 exports.getAuthByName = async(name) => {
-    return await Auth.findOne({ where:{ name:name } }, {
-        'include': [OperationModal]
-    })
+    return await Auth.findAll({where: {name: name}})
 }
 /**
  * 根据id获取权限
  * @param id
  * @returns {Promise.<void>}
  */
-exports.getAuthByName = async(id) => {
-    return await Auth.findOne({ where:{ id:id } }, {
+exports.getAuthById = async(id) => {
+    return await Auth.findOne({where: {id: id}}, {
         'include': [OperationModal]
     })
 }
@@ -49,7 +56,7 @@ exports.getAuthByName = async(id) => {
  * @returns {Promise.<void>}
  */
 exports.update = async(auth, id) => {
-    return await Auth.update(auth, { where:{ id:id } }, {
+    return await Auth.update(auth, {where: {id: id}}, {
         'include': [OperationModal]
     })
 }
@@ -60,7 +67,7 @@ exports.update = async(auth, id) => {
  */
 exports.delete = async(id) => {
     return await Auth.destroy({
-        where:{ id: id }
+        where: {id: id}
     })
 }
 /**
@@ -70,7 +77,7 @@ exports.delete = async(id) => {
  */
 exports.getAuthById = async(id) => {
     return await Auth.findOne({
-        where:{ id: id }
+        where: {id: id}
     }, {
         'include': [OperationModal]
     })
