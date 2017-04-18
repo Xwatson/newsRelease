@@ -2,6 +2,8 @@
  * Created by xwatson on 2017/3/29.
  */
 const Auth = require('../models/auth')
+const Menu = require('../proxy/menu')
+const Operation = require('../proxy/operation')
 const OperationModal = require('../models/operation')
 const sequelize = require("../models/sequelize")
 
@@ -13,8 +15,12 @@ const sequelize = require("../models/sequelize")
 exports.create = async(auth) => {
     // 启动事务
     return await sequelize.transaction((t) => {
-        return Auth.create(auth, {transaction: t}).then((auth) => {
-            console.log(auth)
+        return Auth.create({
+            name:auth.name,
+            status:auth.status
+        }, {transaction: t}).then((auth) => {
+
+            auth.createAuthOperation({ authId:auth.id })
             return auth
         })
         .then(t.rollback.bind(t))

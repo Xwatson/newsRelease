@@ -17,7 +17,7 @@ exports.create = async(ctx) => {
     const message = {}
     try {
         let auth = await Auth.getAuthByName(data.name)
-        if (!auth) {
+        if (!auth.length) {
             auth = await Auth.create({
                 name:data.name,
                 menu_ids:data.menu_ids,
