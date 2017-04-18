@@ -18,13 +18,18 @@ exports.getMenus= async(where ,page, size) => {
         offset:page,
         limit:size
     })
-}/**
+}
+/**
  * 根据Id获取菜单
  * @param id
  * @returns {Promise.<menu>}
  */
 exports.getMenuById = async(id) => {
     return await Menu.findOne({ where:{ id:id } })
+}
+
+exports.getMenuByWhere = async(where) => {
+    return await Menu.findAll({ where:where })
 }
 /**
  * 根据name获取菜单

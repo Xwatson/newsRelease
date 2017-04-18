@@ -35,7 +35,7 @@ exports.getOperations = async(where ,page, size) => {
  * @returns {Promise.<menu>}
  */
 exports.getOperationsByWhere = async(where) => {
-    return await Operation.findAll(where)
+    return await Operation.findAll({ where:where })
 }
 /**
  * 添加

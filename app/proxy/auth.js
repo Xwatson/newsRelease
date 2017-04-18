@@ -2,8 +2,6 @@
  * Created by xwatson on 2017/3/29.
  */
 const Auth = require('../models/auth')
-const Menu = require('../proxy/menu')
-const Operation = require('../proxy/operation')
 const OperationModal = require('../models/operation')
 const sequelize = require("../models/sequelize")
 
@@ -12,20 +10,21 @@ const sequelize = require("../models/sequelize")
  * @param auth
  * @returns {Promise.<void>}
  */
-exports.create = async(auth) => {
+exports.create = async(auth, menus, operations) => {
     // 启动事务
-    return await sequelize.transaction((t) => {
-        return Auth.create({
-            name:auth.name,
-            status:auth.status
-        }, {transaction: t}).then((auth) => {
-
-            auth.createAuthOperation({ authId:auth.id })
-            return auth
-        })
-        .then(t.rollback.bind(t))
-        .catch(t.rollback.bind(t))
-    })
+    const t = await sequelize.transaction()
+    try {
+        const new_auth = await Auth.create(auth, {transaction: t})
+        const authOperation = await new_auth.addAuthOperation(operations, {transaction: t})
+        const authMenu = await new_auth.addAuthMenu(menus, {transaction: t})
+        await t.commit()
+        new_auth.dataValues.operations = operations
+        new_auth.dataValues.menus = menus
+        return await new_auth
+    } catch (e) {
+        console.log(`创建权限事务出错：${e}`)
+        return await t.rollback()
+    }
 }
 /**
  * 根据操作项id获取操作关联
@@ -61,10 +60,25 @@ exports.getAuthById = async(id) => {
  * @param id
  * @returns {Promise.<void>}
  */
-exports.update = async(auth, id) => {
-    return await Auth.update(auth, {where: {id: id}}, {
-        'include': [OperationModal]
-    })
+exports.update = async(auth, menus, operations, id) => {
+    // 启动事务
+    const t = await sequelize.transaction()
+    try {
+        let new_auth = await Auth.update(auth, {where: {id: id}}, {transaction: t})
+        if (new_auth[0]) {
+            new_auth = await Auth.findById(id)
+            const authOperation = await new_auth.setAuthOperation(operations, {transaction: t})
+            const authMenu = await new_auth.setAuthMenu(menus, {transaction: t})
+            new_auth.dataValues.operations = operations
+            new_auth.dataValues.menus = menus
+            await t.commit()
+            return await new_auth
+        }
+        return await t.rollback()
+    } catch (e) {
+        console.log(`创建权限事务出错：${e}`)
+        return await t.rollback()
+    }
 }
 /**
  * 删除
