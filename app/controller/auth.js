@@ -4,6 +4,7 @@
 const responseCode = require('../common/responseCode')
 const Auth = require('../proxy/auth')
 const Admin = require('../proxy/admin')
+const Menu = require('../proxy/menu')
 const Operation = require('../proxy/operation')
 const errLog = '权限控制器：'
 
@@ -18,21 +19,29 @@ exports.create = async(ctx) => {
     try {
         let auth = await Auth.getAuthByName(data.name)
         if (!auth.length) {
+            const menus = await Menu.getMenuByWhere({ id:data.menu_ids })
+            const operations = await Operation.getOperationsByWhere({ id:data.operation_ids })
             auth = await Auth.create({
                 name:data.name,
-                menu_ids:data.menu_ids,
-                menu_names:data.menu_names,
                 status:data.status
-            })
+            }, menus, operations)
+            if (!auth) {
+                message.code = responseCode.FAIL
+                message.message = '创建失败'
+                ctx.body = message
+                return ctx
+            }
             message.code = responseCode.SUCCESS
             message.message = '创建成功'
             message.data = auth
+            ctx.body = message
+            return ctx
         } else {
             message.code = responseCode.FAIL
             message.message = '菜单名称已存在'
+            ctx.body = message
+            return ctx
         }
-        ctx.body = message
-        return ctx
     } catch (err) {
         console.log(`${errLog}添加权限出错：`, err)
         throw err
@@ -44,40 +53,36 @@ exports.create = async(ctx) => {
  * @returns {Promise.<void>}
  */
 exports.update = async(ctx) => {
-    const data = ctx.body
+    const data = ctx.request.body
     const message = {}
     try {
-        if (data.id) {
-            const operation = await Operation.getOperationsByWhere({ id:JSON.parse(data.ids) })
-            if (operation) {
-                let auth = await Auth.update({
-                    name:data.name,
-                    menu_ids:data.menu_ids,
-                    menu_names:data.menu_names,
-                    status:data.status
-                }, data.id)
-                if (auth) {
-                    auth = auth.setOperations(operation)
-                    if (auth) {
-                        message.code = responseCode.SUCCESS
-                        message.message = '修改成功'
-                        message.data = auth
-                    } else {
-                        message.code = responseCode.FAIL
-                        message.message = '修改菜单成功，操作项关联失败'
-                    }
-                } else {
-                    message.code = responseCode.FAIL
-                    message.message = '修改失败'
-                }
-            } else {
-                message.code = responseCode.FAIL
-                message.message = '操作项不存在'
-            }
-        } else {
+        if (!data.id) {
             message.code = responseCode.FAIL
             message.message = '未找到id字段'
+            ctx.body = message
+            return ctx
         }
+        let auth = await Auth.getAuthById(data.id)
+        if (!auth) {
+            message.code = responseCode.FAIL
+            message.message = '该id不存在'
+            ctx.body = message
+            return ctx
+        }
+        const menus = await Menu.getMenuByWhere({ id:data.menu_ids })
+        const operations = await Operation.getOperationsByWhere({ id:data.operation_ids })
+        auth = await Auth.update({ name:data.name, status:data.status }, menus, operations, data.id, auth)
+        if (!auth) {
+            message.code = responseCode.FAIL
+            message.message = '修改失败'
+            ctx.body = message
+            return ctx
+        }
+        message.code = responseCode.SUCCESS
+        message.message = '修改成功'
+        message.data = auth
+        ctx.body = message
+        return ctx
     } catch (err) {
         console.log(`${errLog}修改权限出错：`, err)
         throw err

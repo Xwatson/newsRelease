@@ -5,13 +5,6 @@ const sequelize = require("./sequelize.js")
 const Sequelize = require('sequelize')
 
 const authOperation = sequelize.define('xj_authMenu', {
-        id: {
-            type: Sequelize.INTEGER,
-            primaryKey: true,
-            autoIncrement: true,
-            allowNull: false,
-            unique: true
-        },
         authId: { // 权限关联id
             type: Sequelize.INTEGER,
             field: 'auth_id',
