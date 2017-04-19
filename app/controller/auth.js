@@ -110,7 +110,7 @@ exports.delete = async(ctx) => {
     const data = ctx.request.body
     const message = {}
     try {
-        let auth = await Auth.getAuthById(data.id)
+        let auth = await Auth.getAssociationAuthById(data.id)
         if (!auth) {
             message.code = responseCode.FAIL
             message.message = 'id不存在'
@@ -141,12 +141,8 @@ exports.get = async(ctx) => {
     try {
         if (data.id) {
             const auth = await Auth.getAuthById(data.id)
-            const authOperation = await auth.getAuthOperation()
-            const authMenu = await auth.getAuthMenu()
-            dealWithAuth(authOperation, authMenu)
+            dealWithAuth(auth.dataValues.AuthOperation, auth.dataValues.AuthMenu)
             if (auth) {
-                auth.dataValues.oerations = authOperation
-                auth.dataValues.menus = authMenu
                 message.code = responseCode.SUCCESS
                 message.message = '获取成功'
                 message.data = auth
@@ -176,20 +172,22 @@ exports.list = async(ctx) => {
     if (!data.size) data.size = 10
     const message = {}
     try {
-        const auths = await Auth.getAuthList(data.page - 1, data.size, {})
-        if (auths && auths.length) {
-            auths.map((auth) => {
-                auth.dataValues.operation = auth.getAuthOperation()
-                auth.dataValues.menu = auth.getAuthMenu()
+        const auth = await Auth.getAuthList(data.page - 1, data.size, {})
+        if (auth && auth.rows.length) {
+            auth.rows.map((item) => {
+                dealWithAuth(item.dataValues.AuthOperation, item.dataValues.AuthMenu)
             })
         }
-        console.log(auths)
         /*const authOperation = await auth.getAuthOperation()
         const authMenu = await auth.getAuthMenu()
         dealWithAuth(authOperation, authMenu)*/
         if (auth) {
             message.code = responseCode.SUCCESS
             message.message = '获取成功'
+            auth.totalElement = auth.count
+            auth.content = auth.rows
+            delete auth.count
+            delete auth.rows
             message.data = auth
         } else {
             message.code = responseCode.FAIL

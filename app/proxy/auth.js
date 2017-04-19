@@ -55,6 +55,14 @@ exports.getAuthById = async(id) => {
     return await Auth.findOne({where: {id: id}})
 }
 /**
+ * 根据id获取权限(关联)
+ * @param id
+ * @returns {Promise.<void>}
+ */
+exports.getAssociationAuthById = async(id) => {
+    return await Auth.findOne({ include: [{all:true}] }, {where: {id: id}})
+}
+/**
  * 修改
  * @param auth
  * @param id
@@ -91,28 +99,13 @@ exports.delete = async(id) => {
     })
 }
 /**
- * 根据id获取
- * @param id
- * @returns {Promise.<void>}
- */
-exports.getAuthById = async(id) => {
-    return await Auth.findOne({
-        where: {id: id}
-    }, {
-        'include': [AuthOperation]
-    })
-}
-/**
  * 根据条件获取
  * @param where
  * @returns {Promise.<void>}
  */
 exports.getAuthList = async(page, size, where) => {
     return await Auth.findAndCountAll({
-        include: [{
-            model: Operation,
-            required: true
-        }]
+        include: [{all:true}]
     }, {
         where:where,
         offset:page,
