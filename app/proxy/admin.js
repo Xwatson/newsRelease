@@ -3,6 +3,7 @@
  */
 const Admin = require('../models/admin')
 const Auth = require('../models/auth')
+const sequelize = require("../models/sequelize")
 
 /**
  * 根据用户名获取用户
@@ -31,6 +32,17 @@ exports.getAdminByEmail = async(email) => {
     })
 }
 /**
+ * 根据邮箱获取用户
+ * @returns {Promise.<void>}
+ */
+exports.getAdminByWhere = async(where) => {
+    return await Admin.findOne({
+        where: where
+    },{
+        'include': [Auth]
+    })
+}
+/**
  * 根据id获取用户
  * @returns {Promise.<void>}
  */
@@ -48,7 +60,18 @@ exports.getAdminById = async(id) => {
  * @param admin
  * @returns {Promise.<admin>}
  */
-exports.createAdmin = async(admin) => {
+exports.createAdmin = async(admin, auth) => {
+    const t = await sequelize.transaction()
+    try {
+        const new_admin = await Admin.create(admin, {transaction: t})
+        // const adminAuth = await new_admin.setAuth(auth, {transaction: t})
+        // await t.commit()
+        await t.rollback()
+        return await new_admin
+    } catch (e) {
+        console.log(`创建管理员事务出错：${e}`)
+        return await t.rollback()
+    }
     return await Admin.create(admin)
 }
 /**

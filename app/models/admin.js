@@ -4,6 +4,7 @@
  */
 const sequelize = require("./sequelize.js")
 const Sequelize = require('sequelize')
+const Auth = require('../models/auth')
 
 const admin = sequelize.define('xj_admin', {
         id: {
@@ -16,6 +17,13 @@ const admin = sequelize.define('xj_admin', {
         authId:{
             type: Sequelize.INTEGER,
             field: 'auth_id',
+            references: {
+                // 引用另一个模型
+                model: Auth,
+
+                // 连接模型的列表
+                key: 'id',
+            },
             comment:'权限Id'
         },
         adminName: { // 用户名
@@ -45,7 +53,7 @@ const admin = sequelize.define('xj_admin', {
         }]
     }
 )
-
+Auth.hasMany(admin, { foreignKey:'auth_id', as:'Auth' })
 admin.sync() // 创建表
 
 module.exports = admin
