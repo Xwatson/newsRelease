@@ -2,7 +2,9 @@
  * Created by xwatson on 2017/3/29.
  */
 const Auth = require('../models/auth')
-const OperationModal = require('../models/operation')
+const AuthOperation = require('../models/authOperation')
+const Operation = require('../models/operation')
+const AuthMenu = require('../models/authMenu')
 const sequelize = require("../models/sequelize")
 
 /**
@@ -33,7 +35,7 @@ exports.create = async(auth, menus, operations) => {
  */
 exports.getOperationById = async(id) => {
     return await Auth.getOperations({where: {id: id}}, {
-        'include': [OperationModal]
+        'include': [AuthOperation]
     })
 }
 /**
@@ -50,9 +52,7 @@ exports.getAuthByName = async(name) => {
  * @returns {Promise.<void>}
  */
 exports.getAuthById = async(id) => {
-    return await Auth.findOne({where: {id: id}}, {
-        'include': [OperationModal]
-    })
+    return await Auth.findOne({where: {id: id}})
 }
 /**
  * 修改
@@ -99,7 +99,7 @@ exports.getAuthById = async(id) => {
     return await Auth.findOne({
         where: {id: id}
     }, {
-        'include': [OperationModal]
+        'include': [AuthOperation]
     })
 }
 /**
@@ -107,8 +107,15 @@ exports.getAuthById = async(id) => {
  * @param where
  * @returns {Promise.<void>}
  */
-exports.getAuthByWhere = async(where) => {
-    return await Auth.findAll({
-        'include': [OperationModal]
-    }, where)
+exports.getAuthList = async(page, size, where) => {
+    return await Auth.findAndCountAll({
+        include: [{
+            model: Operation,
+            required: true
+        }]
+    }, {
+        where:where,
+        offset:page,
+        limit:size
+    })
 }

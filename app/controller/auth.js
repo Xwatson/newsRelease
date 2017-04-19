@@ -6,8 +6,21 @@ const Auth = require('../proxy/auth')
 const Admin = require('../proxy/admin')
 const Menu = require('../proxy/menu')
 const Operation = require('../proxy/operation')
+const AuthOperation = require('../models/authOperation')
 const errLog = '权限控制器：'
 
+const dealWithAuth = (authOperation, authMenu) => {
+    if (authOperation && authOperation.length) {
+        authOperation.map((item) => {
+            delete item.dataValues.xj_authOperation
+        })
+    }
+    if (authMenu && authMenu.length) {
+        authMenu.map((item) => {
+            delete item.dataValues.xj_authMenu
+        })
+    }
+}
 /**
  * 创建
  * @param ctx
@@ -94,25 +107,23 @@ exports.update = async(ctx) => {
  * @returns {Promise.<void>}
  */
 exports.delete = async(ctx) => {
-    const data = ctx.body
+    const data = ctx.request.body
     const message = {}
     try {
-        const authAdmin = await Admin.getAuthById(data.id)
-        if (!authAdmin) {
-            const auth = await Auth.delete(data.id)
-            if (auth) {
-                message.code = responseCode.SUCCESS
-                message.message = '删除成功'
-                message.data = auth
-            } else {
-                message.code = responseCode.FAIL
-                message.message = '删除失败'
-            }
-        } else {
+        let auth = await Auth.getAuthById(data.id)
+        if (!auth) {
             message.code = responseCode.FAIL
-            message.message = '该权限已被关联'
+            message.message = 'id不存在'
+            ctx.body = message
+            return ctx
         }
-        ctx.body = ctx
+        await auth.setAuthOperation([])
+        await auth.setAuthMenu([])
+        auth = await auth.destroy()
+        message.code = responseCode.SUCCESS
+        message.message = '删除成功'
+        message.data = auth
+        ctx.body = message
         return ctx
     } catch (err) {
         console.log(`${errLog}删除权限出错：`, err)
@@ -125,12 +136,17 @@ exports.delete = async(ctx) => {
  * @returns {Promise.<void>}
  */
 exports.get = async(ctx) => {
-    const data = ctx.body
+    const data = ctx.query
     const message = {}
     try {
         if (data.id) {
             const auth = await Auth.getAuthById(data.id)
+            const authOperation = await auth.getAuthOperation()
+            const authMenu = await auth.getAuthMenu()
+            dealWithAuth(authOperation, authMenu)
             if (auth) {
+                auth.dataValues.oerations = authOperation
+                auth.dataValues.menus = authMenu
                 message.code = responseCode.SUCCESS
                 message.message = '获取成功'
                 message.data = auth
@@ -142,7 +158,7 @@ exports.get = async(ctx) => {
             message.code = responseCode.FAIL
             message.message = '未找到id字段'
         }
-        ctx.body = ctx
+        ctx.body = message
         return ctx
     } catch (err) {
         console.log(`${errLog}获取权限出错：`, err)
@@ -155,10 +171,22 @@ exports.get = async(ctx) => {
  * @returns {Promise.<void>}
  */
 exports.list = async(ctx) => {
-    const data = ctx.body
+    const data = ctx.query
+    if (!data.page) data.page = 1
+    if (!data.size) data.size = 10
     const message = {}
     try {
-        const auth = await Auth.getAuthByWhere({})
+        const auths = await Auth.getAuthList(data.page - 1, data.size, {})
+        if (auths && auths.length) {
+            auths.map((auth) => {
+                auth.dataValues.operation = auth.getAuthOperation()
+                auth.dataValues.menu = auth.getAuthMenu()
+            })
+        }
+        console.log(auths)
+        /*const authOperation = await auth.getAuthOperation()
+        const authMenu = await auth.getAuthMenu()
+        dealWithAuth(authOperation, authMenu)*/
         if (auth) {
             message.code = responseCode.SUCCESS
             message.message = '获取成功'
@@ -167,7 +195,7 @@ exports.list = async(ctx) => {
             message.code = responseCode.FAIL
             message.message = '获取失败'
         }
-        ctx.body = ctx
+        ctx.body = message
         return ctx
     } catch (err) {
         console.log(`${errLog}权限列表出错：`, err)
