@@ -53,7 +53,7 @@ const admin = sequelize.define('xj_admin', {
         }]
     }
 )
-Auth.hasMany(admin, { foreignKey:'auth_id', as:'Auth' })
+Auth.hasMany(admin, { foreignKey:'auth_id' })
 admin.sync() // 创建表
 
 module.exports = admin

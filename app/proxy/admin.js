@@ -67,7 +67,7 @@ exports.createAdmin = async(admin, auth) => {
         // const adminAuth = await new_admin.setAuth(auth, {transaction: t})
         // await t.commit()
         await t.rollback()
-        return await new_admin
+        return new_admin
     } catch (e) {
         console.log(`创建管理员事务出错：${e}`)
         return await t.rollback()

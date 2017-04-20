@@ -71,7 +71,7 @@ exports.create = async(ctx) => {
         adminInfo = await Admin.createAdmin({
             adminName:data.name,
             email:data.email,
-            auth_id:123,
+            auth_id:data.auth_id,
             password:encipher.getMd5(data.password),
             status:data.status
         }, auth)
