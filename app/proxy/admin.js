@@ -11,11 +11,11 @@ const sequelize = require("../models/sequelize")
  */
 exports.getAdminByName = async(name) => {
     return await Admin.findOne({
+        'include': [ { model: Auth, required: true, as:'Auth'}]
+    }, {
         where: {
             adminName: name
         }
-    },{
-        'include': [Auth]
     })
 }
 /**
@@ -24,11 +24,11 @@ exports.getAdminByName = async(name) => {
  */
 exports.getAdminByEmail = async(email) => {
     return await Admin.findOne({
+        'include': [ { model: Auth, required: true, as:'Auth'}]
+    }, {
         where: {
             email: email
         }
-    },{
-        'include': [Auth]
     })
 }
 /**
@@ -37,9 +37,9 @@ exports.getAdminByEmail = async(email) => {
  */
 exports.getAdminByWhere = async(where) => {
     return await Admin.findOne({
-        where: where
+        'include': [ { model: Auth, required: true, as:'Auth'}]
     },{
-        'include': [Auth]
+        where: where
     })
 }
 /**
@@ -48,31 +48,36 @@ exports.getAdminByWhere = async(where) => {
  */
 exports.getAdminById = async(id) => {
     return await Admin.findOne({
+        'include': [ { model: Auth, required: true, as:'Auth'}]
+    }, {
         where: {
             id: id
         }
-    },{
-        'include': [Auth]
     })
+}
+/**
+ * 根据id获取用户(非关联)
+ * @returns {Promise.<void>}
+ */
+exports.getAdminByIdNoAssociation = async(id) => {
+    return await Admin.findById(id)
 }
 /**
  * 创建
  * @param admin
  * @returns {Promise.<admin>}
  */
-exports.createAdmin = async(admin, auth) => {
-    const t = await sequelize.transaction()
-    try {
-        const new_admin = await Admin.create(admin, {transaction: t})
-        // const adminAuth = await new_admin.setAuth(auth, {transaction: t})
-        // await t.commit()
-        await t.rollback()
-        return new_admin
-    } catch (e) {
-        console.log(`创建管理员事务出错：${e}`)
-        return await t.rollback()
-    }
+exports.create = async(admin) => {
     return await Admin.create(admin)
+}
+/**
+ * 修改
+ * @param admin
+ * @param id
+ * @returns {Promise.<admin>}
+ */
+exports.update = async(admin, id) => {
+    return await Admin.update(admin, { where: { id: id } })
 }
 /**
  * 根据权限id获权限关联
@@ -81,4 +86,28 @@ exports.createAdmin = async(admin, auth) => {
  */
 exports.getAuthById = async(id) => {
     return await Auth.getAuth({ where:{ id:id } })
+}
+/**
+ * 删除
+ * @param id
+ * @returns {Promise.<void>}
+ */
+exports.delete = async(id) => {
+    return await Admin.destroy({
+        where: {id: id}
+    })
+}
+/**
+ * 根据条件获取
+ * @param where
+ * @returns {Promise.<void>}
+ */
+exports.getAdminList = async(page, size, where) => {
+    return await Admin.findAndCountAll({
+        include: [ { model: Auth, required: true, as:'Auth'}]
+    }, {
+        where:where,
+        offset:page,
+        limit:size
+    })
 }

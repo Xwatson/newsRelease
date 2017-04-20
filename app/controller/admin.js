@@ -7,6 +7,7 @@ const Admin = require('../proxy/admin')
 const Auth = require('../proxy/auth')
 const encipher = require('../common/encipher')
 const token = require('../common/token')
+const errLog = '管理员控制器：'
 
 /**
  * 登录
@@ -49,12 +50,12 @@ exports.create = async(ctx) => {
     try {
         let adminInfo = await Admin.getAdminByWhere({'$or':[{ adminName:data.name }, { email:data.email }] })
         if (adminInfo) {
-            if (!adminInfo.dataValues.adminName || adminInfo.dataValues.adminName !== '') {
+            if ((!adminInfo.dataValues.adminName || adminInfo.dataValues.adminName !== '') && adminInfo.dataValues.adminName === data.name) {
                 message.code = responseCode.FAIL
                 message.message = '账户已存在'
                 ctx.body = message
                 return ctx
-            } else if (!adminInfo.dataValues.email || adminInfo.dataValues.email !== '') {
+            } else if ((!adminInfo.dataValues.email || adminInfo.dataValues.email !== '') && adminInfo.dataValues.email === data.email) {
                 message.code = responseCode.FAIL
                 message.message = '邮箱已被注册'
                 ctx.body = message
@@ -68,13 +69,13 @@ exports.create = async(ctx) => {
             ctx.body = message
             return ctx
         }
-        adminInfo = await Admin.createAdmin({
+        adminInfo = await Admin.create({
             adminName:data.name,
             email:data.email,
             auth_id:data.auth_id,
             password:encipher.getMd5(data.password),
             status:data.status
-        }, auth)
+        })
         if (!adminInfo) {
             message.code = responseCode.FAIL
             message.message = '创建用户失败'
@@ -88,7 +89,7 @@ exports.create = async(ctx) => {
         ctx.body = message
         return ctx
     } catch (err) {
-        console.log(err)
+        console.log(`${errLog}创建管理员出错：`, err)
         throw (err)
     }
 }
@@ -104,29 +105,33 @@ exports.update = async(ctx) => {
     const message = {}
     try {
         if (data.id) {
-            const meun = await Menu.update({
-                name:data.name,
-                router:data.router,
-                icon:data.icon,
-                // sort:Menu.max('sort', { where:{ parent_id:data.parent_id || 0 } }), 不修改排序
-                parent_id:data.parent_id || 0
-            }, data.id)
-            if (meun) {
-                message.code = responseCode.SUCCESS
-                message.message = '修改成功'
-                message.data = await Menu.getMenuById(data.id)
-            } else {
+            const auth = await Auth.getAuthById(data.auth_id)
+            if (!auth) {
                 message.code = responseCode.FAIL
-                message.message = '修改失败'
+                message.message = '关联权限不存在'
+                ctx.body = message
+                return ctx
             }
+            const admin = await Admin.update({
+                adminName:data.name,
+                email:data.email,
+                auth_id:data.auth_id,
+                password:encipher.getMd5(data.password),
+                status:data.status
+            }, data.id)
+            message.code = responseCode.SUCCESS
+            message.message = '修改成功'
+            message.data = admin
+            ctx.body = message
+            return ctx
         } else {
             message.code = responseCode.FAIL
             message.message = '未找到id字段'
+            ctx.body = message
+            return ctx
         }
-        ctx.body = message
-        return ctx
     } catch (err) {
-        console.log(`${errLog}修改菜单出错：`, err)
+        console.log(`${errLog}修改管理员出错：`, err)
         throw err
     }
 }
@@ -140,30 +145,16 @@ exports.delete = async(ctx) => {
     const message = {}
     try {
         if (data.id) {
-            let menu = await Menu.getMenuById(data.id)
-            if (!menu) {
+            let admin = await Admin.getAdminByIdNoAssociation(data.id)
+            if (!admin) {
                 message.code = responseCode.FAIL
                 message.message = 'id不存在'
                 ctx.body = message
                 return ctx
             }
-            const authMenu = await menu.getAuthMenu()
-            if (authMenu.length) {
-                message.code = responseCode.FAIL
-                message.message = '该操菜单已被关联'
-                ctx.body = message
-                return ctx
-            }
-            menu = await Menu.delete(data.id)
-            if (!menu) {
-                message.code = responseCode.FAIL
-                message.message = '删除失败'
-                ctx.body = message
-                return ctx
-            }
+            await Admin.delete(data.id)
             message.code = responseCode.SUCCESS
             message.message = '删除成功'
-            message.data = menu
             ctx.body = message
             return ctx
         } else {
@@ -173,7 +164,7 @@ exports.delete = async(ctx) => {
         ctx.body = ctx
         return ctx
     } catch (err) {
-        console.log(`${errLog}删除菜单出错：`, err)
+        console.log(`${errLog}删除管理员出错：`, err)
         throw err
     }
 }
@@ -187,14 +178,14 @@ exports.get = async(ctx) => {
     const message = {}
     try {
         if (data.id) {
-            const menu = await Menu.getMenuById(data.id)
-            if (menu) {
+            const admin = await Admin.getAdminById(data.id)
+            if (admin) {
                 message.code = responseCode.SUCCESS
                 message.message = '获取成功'
-                message.data = menu
+                message.data = admin
             } else {
                 message.code = responseCode.FAIL
-                message.message = '该菜单不存在'
+                message.message = '该用户不存在'
             }
         } else {
             message.code = responseCode.FAIL
@@ -203,7 +194,7 @@ exports.get = async(ctx) => {
         ctx.body = message
         return ctx
     } catch (err) {
-        console.log(`${errLog}获取菜单出错：`, err)
+        console.log(`${errLog}获取管理员出错：`, err)
         throw err
     }
 }
@@ -218,15 +209,15 @@ exports.list = async(ctx) => {
     if (!data.size) data.size = 10
     const message = {}
     try {
-        const menu = await Menu.getMenus({}, data.page - 1, data.size)
-        if (menu) {
+        const admin = await Admin.getAdminList(data.page - 1, data.size, {})
+        if (admin) {
             message.code = responseCode.SUCCESS
             message.message = '获取成功'
-            menu.totalElement = menu.count
-            menu.content = menu.rows
-            delete menu.count
-            delete menu.rows
-            message.data = menu
+            admin.totalElement = admin.count
+            admin.content = admin.rows
+            delete admin.count
+            delete admin.rows
+            message.data = admin
         } else {
             message.code = responseCode.FAIL
             message.message = '获取失败'
@@ -234,7 +225,7 @@ exports.list = async(ctx) => {
         ctx.body = message
         return ctx
     } catch (err) {
-        console.log(`${errLog}菜单列表出错：`, err)
+        console.log(`${errLog}管理员列表出错：`, err)
         throw err
     }
 }
