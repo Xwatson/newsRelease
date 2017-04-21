@@ -42,7 +42,7 @@ exports.list = async(ctx) => {
     if (!data.size) data.size = 10
     const message = {}
     try {
-        const operations = await Operation.getOperations({}, data.page - 1, data.size)
+        const operations = await Operation.getOperations({}, parseInt(data.page) - 1, parseInt(data.size))
         if (operations) {
             message.code = responseCode.SUCCESS
             message.message = '获取成功'

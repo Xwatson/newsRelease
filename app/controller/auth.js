@@ -172,7 +172,7 @@ exports.list = async(ctx) => {
     if (!data.size) data.size = 10
     const message = {}
     try {
-        const auth = await Auth.getAuthList(data.page - 1, data.size, {})
+        const auth = await Auth.getAuthList(parseInt(data.page) - 1, parseInt(data.size), {})
         if (auth && auth.rows.length) {
             auth.rows.map((item) => {
                 dealWithAuth(item.dataValues.AuthOperation, item.dataValues.AuthMenu)

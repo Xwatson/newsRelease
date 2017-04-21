@@ -170,7 +170,7 @@ exports.list = async(ctx) => {
     if (!data.size) data.size = 10
     const message = {}
     try {
-        const menu = await Menu.getMenus({}, data.page - 1, data.size)
+        const menu = await Menu.getMenus({}, parseInt(data.page) - 1, parseInt(data.size))
         if (menu) {
             message.code = responseCode.SUCCESS
             message.message = '获取成功'
