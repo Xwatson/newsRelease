@@ -105,8 +105,7 @@ exports.delete = async(id) => {
  */
 exports.getAuthList = async(page, size, where) => {
     return await Auth.findAndCountAll({
-        include: [{all:true}]
-    }, {
+        include: [{all:true}],
         where:where,
         offset:page,
         limit:size
