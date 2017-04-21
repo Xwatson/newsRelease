@@ -104,8 +104,7 @@ exports.delete = async(id) => {
  */
 exports.getAdminList = async(page, size, where) => {
     return await Admin.findAndCountAll({
-        include: [ { model: Auth, required: true, as:'Auth'}]
-    }, {
+        include: [ { model: Auth, required: true, as:'Auth'}],
         where:where,
         offset:page,
         limit:size
