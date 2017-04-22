@@ -11,8 +11,7 @@ const sequelize = require("../models/sequelize")
  */
 exports.getAdminByName = async(name) => {
     return await Admin.findOne({
-        'include': [ { model: Auth, required: true, as:'Auth'}]
-    }, {
+        'include': [ { model: Auth, as:'Auth'}],
         where: {
             adminName: name
         }

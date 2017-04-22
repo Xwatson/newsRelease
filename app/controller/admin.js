@@ -15,7 +15,7 @@ const errLog = '管理员控制器：'
  * @returns ctx
  */
 exports.login = async(ctx) => {
-    const data = ctx.body
+    const data = ctx.request.body
     const message = {}
     const adminInfo = await Admin.getAdminByName(data.name)
     if (!adminInfo) {
@@ -24,7 +24,7 @@ exports.login = async(ctx) => {
         ctx.body = message
         return ctx
     }
-    if (data.password !== encipher.getMd5(adminInfo.password)) {
+    if (encipher.getMd5(data.password) !== adminInfo.password) {
         message.code = responseCode.FAIL
         message.message = '密码错误'
         ctx.body = message
