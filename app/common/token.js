@@ -2,7 +2,7 @@
  * Created by xuwus on 2017/3/22.
  */
 const jwt = require('jwt-simple')
-const jwtTokenSecret = Symbol('NEWS_RELEASE_LOVE_LXJ_TOKEN')
+const jwtTokenSecret = 'NEWS_RELEASE_LOVE_LXJ_TOKEN'
 const responseCode = require('../common/responseCode')
 
 /**
