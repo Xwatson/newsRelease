@@ -100,3 +100,18 @@ exports.sort = async(current, exchange) => {
             })
     })
 }
+/**
+ * 获取所有
+ * @param id
+ * @param where
+ * @param page
+ * @param size
+ * @returns {Promise.<menu>}
+ */
+exports.getCategorys= async(where ,page, size) => {
+    return await Category.findAndCountAll({
+        where:where,
+        offset:page,
+        limit:size
+    })
+}

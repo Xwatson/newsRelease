@@ -62,3 +62,18 @@ exports.deleteNews = async(id) => {
 exports.updateNews = async(news, id) => {
     return await News.update(news, { where:{ id:id } })
 }
+/**
+ * 获取所有
+ * @param id
+ * @param where
+ * @param page
+ * @param size
+ * @returns {Promise.<menu>}
+ */
+exports.getNewsList= async(where, page, size) => {
+    return await News.findAndCountAll({
+        where:where,
+        offset:page,
+        limit:size
+    })
+}

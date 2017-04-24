@@ -1,7 +1,9 @@
 /**
  * Created by xuwus on 2017/4/10.
  */
+const sequelize = require("../models/sequelize")
 const Links = require('../models/links')
+
 /**
  * 根据name获取
  * @param name
@@ -50,4 +52,45 @@ exports.deleteLinks = async(id) => {
  */
 exports.updateLinks = async(links, id) => {
     return await Links.update(links, { where:{ id:id } })
+}
+/**
+ * 获取所有数据
+ * @returns {Promise.<menu>}
+ */
+exports.getLinksList = async(where ,page, size) => {
+    return await Links.findAndCountAll({
+        where:where,
+        offset:page,
+        limit:size
+    })
+}
+/**
+ * 获取最大值
+ * @param field
+ * @param where
+ * @returns {Promise.<void>}
+ */
+exports.max = async(field, where) => {
+    return await Links.max(field, where)
+}
+
+/**
+ * 排序
+ * @param current 当前操作分类
+ * @param exchange 交换分类
+ * @returns {Promise.<void>}
+ */
+exports.sort = async(current, exchange) => {
+    // 启动事务
+    return await sequelize.transaction((t) => {
+        return Links.update({sort: exchange.sort}, {where: {id: current.id}}, {transaction: t})
+            .then(() => {
+                return Links.update({sort: exchange.sort}, {where: {id: current.id}}, {transaction: t})
+            })
+            .then(t.commit.bind(t))
+            .catch((err) => {
+                console.error(err)
+                throw err
+            })
+    })
 }
