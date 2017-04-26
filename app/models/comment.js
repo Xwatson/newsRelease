@@ -18,11 +18,25 @@ const comment = sequelize.define('xj_comment', {
         userId: { // 用户关联id
             type: Sequelize.INTEGER,
             field: 'user_id',
+            references: {
+                // 引用另一个模型
+                model: User,
+
+                // 连接模型的列表
+                key: 'id',
+            },
             comment:'用户Id'
         },
         newsId: { // 新闻关联id
             type: Sequelize.INTEGER,
             field: 'news_id',
+            references: {
+                // 引用另一个模型
+                model: News,
+
+                // 连接模型的列表
+                key: 'id',
+            },
             comment:'新闻Id'
         },
         content: { // 内容
