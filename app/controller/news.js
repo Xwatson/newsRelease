@@ -33,7 +33,7 @@ exports.create = async(ctx) => {
             carouselPic:data.carouselPic,
             is_carousel:data.is_carousel,
             author:data.author,
-            accessCount:data.accessCount,
+            accessCount:1,
             status:data.status
         })
         if (!news) {
@@ -81,7 +81,7 @@ exports.update = async(ctx) => {
                 carouselPic:data.carouselPic,
                 is_carousel:data.is_carousel,
                 author:data.author,
-                accessCount:data.accessCount,
+                // accessCount:data.accessCount,
                 status:data.status
             }, data.id)
             message.code = responseCode.SUCCESS
