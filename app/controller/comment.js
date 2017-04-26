@@ -14,27 +14,16 @@ exports.create = async(ctx) => {
     const data = ctx.request.body
     const message = {}
     try {
-        let menu = await Comment.getMenuByName(data.name)
-        if (menu) {
-            message.code = responseCode.FAIL
-            message.message = '评论名称已存在'
-            ctx.body = message
-            return ctx
-        }
-        const max = await Comment.max('sort', { where:{ parent_id:data.parent_id || 0 } })
-        menu = await Comment.create({
-            name:data.name,
-            router:data.router,
-            icon:data.icon,
-            sort:max || 0,
-            parent_id:data.parent_id || 0,
+        const comment = await Comment.createComment({
+            user_id:data.user_id,
+            news_id:data.news_id,
+            content:data.content,
             status:data.status
         })
-        if (menu) {
-            menu = await Comment.getMenuByName(data.name)
+        if (comment) {
             message.code = responseCode.SUCCESS
             message.message = '创建成功'
-            message.data = menu
+            message.data = comment
         } else {
             message.code = responseCode.FAIL
             message.message = '创建失败'
@@ -56,17 +45,16 @@ exports.update = async(ctx) => {
     const message = {}
     try {
         if (data.id) {
-            const meun = await Menu.update({
-                name:data.name,
-                router:data.router,
-                icon:data.icon,
-                // sort:Menu.max('sort', { where:{ parent_id:data.parent_id || 0 } }), 不修改排序
-                parent_id:data.parent_id || 0
+            const comment = await Comment.updateComment({
+                user_id:data.user_id,
+                news_id:data.news_id,
+                content:data.content,
+                status:data.status
             }, data.id)
-            if (meun) {
+            if (comment) {
                 message.code = responseCode.SUCCESS
                 message.message = '修改成功'
-                message.data = await Menu.getMenuById(data.id)
+                message.data = comment
             } else {
                 message.code = responseCode.FAIL
                 message.message = '修改失败'
@@ -78,7 +66,7 @@ exports.update = async(ctx) => {
         ctx.body = message
         return ctx
     } catch (err) {
-        console.log(`${errLog}修改菜单出错：`, err)
+        console.log(`${errLog}修改评论出错：`, err)
         throw err
     }
 }
@@ -92,22 +80,8 @@ exports.delete = async(ctx) => {
     const message = {}
     try {
         if (data.id) {
-            let menu = await Menu.getMenuById(data.id)
-            if (!menu) {
-                message.code = responseCode.FAIL
-                message.message = 'id不存在'
-                ctx.body = message
-                return ctx
-            }
-            const authMenu = await menu.getAuthMenu()
-            if (authMenu.length) {
-                message.code = responseCode.FAIL
-                message.message = '该操菜单已被关联'
-                ctx.body = message
-                return ctx
-            }
-            menu = await Menu.delete(data.id)
-            if (!menu) {
+            const comment = await Comment.deleteComment(data.id)
+            if (!comment) {
                 message.code = responseCode.FAIL
                 message.message = '删除失败'
                 ctx.body = message
@@ -115,7 +89,7 @@ exports.delete = async(ctx) => {
             }
             message.code = responseCode.SUCCESS
             message.message = '删除成功'
-            message.data = menu
+            message.data = comment
             ctx.body = message
             return ctx
         } else {
@@ -125,7 +99,7 @@ exports.delete = async(ctx) => {
         ctx.body = ctx
         return ctx
     } catch (err) {
-        console.log(`${errLog}删除菜单出错：`, err)
+        console.log(`${errLog}删除评论出错：`, err)
         throw err
     }
 }
@@ -139,14 +113,14 @@ exports.get = async(ctx) => {
     const message = {}
     try {
         if (data.id) {
-            const menu = await Menu.getMenuById(data.id)
-            if (menu) {
+            const comment = await Comment.getCommentById(data.id)
+            if (comment) {
                 message.code = responseCode.SUCCESS
                 message.message = '获取成功'
-                message.data = menu
+                message.data = comment
             } else {
                 message.code = responseCode.FAIL
-                message.message = '该菜单不存在'
+                message.message = '评论不存在'
             }
         } else {
             message.code = responseCode.FAIL
@@ -170,15 +144,15 @@ exports.list = async(ctx) => {
     if (!data.size) data.size = 10
     const message = {}
     try {
-        const menu = await Menu.getMenus({}, parseInt(data.page) - 1, parseInt(data.size))
-        if (menu) {
+        const comment = await Comment.getCommentList({}, parseInt(data.page) - 1, parseInt(data.size))
+        if (comment) {
             message.code = responseCode.SUCCESS
             message.message = '获取成功'
-            menu.totalElement = menu.count
-            menu.content = menu.rows
-            delete menu.count
-            delete menu.rows
-            message.data = menu
+            comment.totalElement = comment.count
+            comment.content = comment.rows
+            delete comment.count
+            delete comment.rows
+            message.data = comment
         } else {
             message.code = responseCode.FAIL
             message.message = '获取失败'
@@ -186,7 +160,7 @@ exports.list = async(ctx) => {
         ctx.body = message
         return ctx
     } catch (err) {
-        console.log(`${errLog}菜单列表出错：`, err)
+        console.log(`${errLog}评论列表出错：`, err)
         throw err
     }
 }

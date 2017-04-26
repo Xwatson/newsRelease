@@ -24,6 +24,14 @@ exports.getCommentByName = async(name) => {
 exports.getCommentById = async(id) => {
     return await Comment.findById(id, { include:[News, User] })
 }
+/**
+ * 根据user id获取
+ * @param id
+ * @returns {Promise.<void>}
+ */
+exports.getCommentByUserId = async(id) => {
+    return await Comment.findAll({ where:{ user_id:id } })
+}
 
 /**
  * 根据新闻id获取
@@ -62,6 +70,16 @@ exports.deleteComment = async(id) => {
         where:{ id:id }
     })
 }
+/**
+ * 根据user id删除
+ * @param id
+ * @returns {Promise.<void>}
+ */
+exports.deleteCommentByUserId = async(id) => {
+    return await Comment.destroy({
+        where:{ user_id:id }
+    })
+}
 
 /**
  * 更新
@@ -71,4 +89,15 @@ exports.deleteComment = async(id) => {
  */
 exports.updateComment = async(comment, id) => {
     return await News.update(comment, { where:{ id:id } })
+}
+/**
+ * 获取所有数据
+ * @returns {Promise.<menu>}
+ */
+exports.getCommentList = async(where ,page, size) => {
+    return await Comment.findAndCountAll({
+        where:where,
+        offset:page,
+        limit:size
+    })
 }

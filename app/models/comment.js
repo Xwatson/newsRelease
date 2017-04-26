@@ -23,10 +23,6 @@ const comment = sequelize.define('xj_comment', {
             field: 'news_id',
             comment:'新闻Id'
         },
-        title: { // 新闻标题
-            type: Sequelize.STRING,
-            allowNull: false
-        },
         content: { // 内容
             type: Sequelize.STRING,
             allowNull: false
@@ -34,6 +30,7 @@ const comment = sequelize.define('xj_comment', {
         status: { // 状态
             type: Sequelize.ENUM,
             allowNull: false,
+            defaultValue:'PASS',
             values: ['PASS', 'REJECT'] // 状态：通过，拒绝
         }
     },
