@@ -7,9 +7,9 @@ const User = require('../models/user')
  * @param name
  * @returns {Promise.<void>}
  */
-exports.getUserByName = async(name) => {
+exports.getUserByEmail = async(email) => {
     return await User.findOne({
-        where:{ name:name }
+        where:{ email:email }
     })
 }
 
@@ -21,7 +21,17 @@ exports.getUserByName = async(name) => {
 exports.getUserById = async(id) => {
     return await User.findById(id)
 }
-
+/**
+ * 获取所有数据
+ * @returns {Promise.<menu>}
+ */
+exports.getUserList = async(where ,page, size) => {
+    return await User.findAndCountAll({
+        where:where,
+        offset:page,
+        limit:size
+    })
+}
 /**
  * 创建
  * @param user
