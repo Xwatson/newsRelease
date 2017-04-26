@@ -4,6 +4,8 @@
  */
 const sequelize = require("./sequelize.js")
 const Sequelize = require('sequelize')
+const User = require('./user')
+const News = require('./news')
 
 const comment = sequelize.define('xj_comment', {
         id: {
@@ -48,6 +50,9 @@ const comment = sequelize.define('xj_comment', {
             }]
     }
 )
+comment.belongsTo(User, { as:'User', foreignKey:'user_id' })
+comment.belongsTo(News, { as:'News', foreignKey:'news_id' })
+
 comment.sync() // 创建表
 
 module.exports = comment
