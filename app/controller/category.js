@@ -55,7 +55,14 @@ exports.update = async(ctx) => {
     const message = {}
     try {
         if (data.id) {
-            const category = await Category.updateCategory({
+            let category = await Category.getCategoryById(data.id)
+            if (!category) {
+                message.code = responseCode.FAIL
+                message.message = '分类不存在'
+                ctx.body = message
+                return ctx
+            }
+            category = await Category.updateCategory({
                 name:data.name,
                 is_nav:data.is_nav,
                 // sort:max || 0,

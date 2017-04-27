@@ -19,7 +19,7 @@ exports.create = async(ctx) => {
         const category = await Category.getCategoryById(data.category_id)
         if (!category) {
             message.code = responseCode.FAIL
-            message.message = '关联权限不存在'
+            message.message = '关联分类不存在'
             ctx.body = message
             return ctx
         }
@@ -48,7 +48,7 @@ exports.create = async(ctx) => {
         ctx.body = message
         return ctx
     } catch (err) {
-        console.log(`${errLog}创建管理员出错：`, err)
+        console.log(`${errLog}创建新闻出错：`, err)
         throw (err)
     }
 }
@@ -71,7 +71,14 @@ exports.update = async(ctx) => {
                 ctx.body = message
                 return ctx
             }
-            const news = await News.updateNews({
+            let news = await News.getNewsById(data.id)
+            if (!news) {
+                message.code = responseCode.FAIL
+                message.message = '新闻不存在'
+                ctx.body = message
+                return ctx
+            }
+            news = await News.updateNews({
                 title:data.title,
                 keyWords:data.keyWords,
                 summary:data.summary,
@@ -86,7 +93,7 @@ exports.update = async(ctx) => {
             }, data.id)
             message.code = responseCode.SUCCESS
             message.message = '修改成功'
-            message.data = news
+            message.data = await News.getNewsById(data.id)
             ctx.body = message
             return ctx
         } else {

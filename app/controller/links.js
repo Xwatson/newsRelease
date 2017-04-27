@@ -78,7 +78,7 @@ exports.create = async(ctx) => {
             return ctx
         }
         const max = await Links.max('sort', {})
-        links = await Links.createLinks({ name:data.name, url:data.url, icon:data.icon, sort:max })
+        links = await Links.createLinks({ name:data.name, url:data.url, icon:data.icon, sort:isNaN(max) ? 0 : max, status:data.status })
         if (!links) {
             message.code = responseCode.FAIL
             message.message = '创建失败'
@@ -118,7 +118,7 @@ exports.update = async(ctx) => {
                 message.code = responseCode.FAIL
                 message.message = '修改失败'
             }
-            links = await Operation.getOperationById(data.id)
+            links = await Links.getLinksById(data.id)
             message.code = responseCode.SUCCESS
             message.message = '修改成功'
             message.data = links

@@ -21,7 +21,7 @@ exports.getNewsByName = async(name) => {
  * @returns {Promise.<void>}
  */
 exports.getNewsById = async(id) => {
-    return await News.findById(id, { include:[Category] })
+    return await News.findById(id, { include:[{ model: Category, required: true, as:'Category'}] })
 }
 
 /**
