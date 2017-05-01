@@ -6,7 +6,7 @@ const sequelize = require("./sequelize.js")
 const Sequelize = require('sequelize')
 const News = require('../models/news')
 
-const category = sequelize.define('xj_category', {
+const category = sequelize.define('category', {
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,

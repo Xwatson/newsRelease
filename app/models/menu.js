@@ -7,7 +7,7 @@ const Sequelize = require('sequelize')
 const Auth = require('./auth')
 const AuthMenu = require('./authMenu')
 
-const menu = sequelize.define('xj_menu', {
+const menu = sequelize.define('menu', {
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,

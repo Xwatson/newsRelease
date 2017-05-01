@@ -7,7 +7,7 @@ const Sequelize = require('sequelize')
 const User = require('./user')
 const News = require('./news')
 
-const comment = sequelize.define('xj_comment', {
+const comment = sequelize.define('comment', {
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,

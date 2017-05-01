@@ -6,7 +6,7 @@ const sequelize = require("./sequelize.js")
 const Sequelize = require('sequelize')
 const Admin = require('./admin')
 
-const auth = sequelize.define('xj_auth', {
+const auth = sequelize.define('auth', {
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,

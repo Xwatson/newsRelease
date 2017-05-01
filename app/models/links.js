@@ -5,7 +5,7 @@
 const sequelize = require("./sequelize.js")
 const Sequelize = require('sequelize')
 
-const links = sequelize.define('xj_links', {
+const links = sequelize.define('links', {
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,

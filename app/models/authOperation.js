@@ -4,7 +4,7 @@
 const sequelize = require("./sequelize.js")
 const Sequelize = require('sequelize')
 
-const authOperation = sequelize.define('xj_authOperation', {
+const authOperation = sequelize.define('authOperation', {
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,
