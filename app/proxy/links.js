@@ -1,5 +1,5 @@
 /**
- * Created by xuwus on 2017/4/10.
+ * Created by lxj on 2017/4/10.
  */
 const sequelize = require("../models/sequelize")
 const Links = require('../models/links')

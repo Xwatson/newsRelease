@@ -1,5 +1,5 @@
 /**
- * Created by xuwus on 2017/4/22.
+ * Created by lxj on 2017/4/22.
  */
 const responseCode = require('../common/responseCode')
 const Operation = require('../proxy/operation')

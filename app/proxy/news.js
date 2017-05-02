@@ -1,5 +1,5 @@
 /**
- * Created by xuwus on 2017/4/10.
+ * Created by lxj on 2017/4/10.
  */
 const News = require('../models/news')
 const Category = require('../models/category')

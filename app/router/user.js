@@ -1,5 +1,5 @@
 /**
- * Created by xuwus on 2017/4/26.
+ * Created by lxj on 2017/4/26.
  */
 const service = require('../../config/service.json')
 const user = require('../controller/user')

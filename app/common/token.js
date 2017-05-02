@@ -1,5 +1,5 @@
 /**
- * Created by xuwus on 2017/3/22.
+ * Created by lxj on 2017/3/22.
  */
 const jwt = require('jwt-simple')
 const jwtTokenSecret = 'bf3f1d8eeae6ab319844eab323c56e54'

@@ -1,6 +1,6 @@
 /**
  * 评论表
- *  Created by xuwus on 2017/3/13.
+ *  Created by lxj on 2017/3/13.
  */
 const sequelize = require("./sequelize.js")
 const Sequelize = require('sequelize')

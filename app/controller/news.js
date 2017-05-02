@@ -1,5 +1,5 @@
 /**
- * Created by xuwus on 2017/4/24.
+ * Created by lxj on 2017/4/24.
  */
 const responseCode = require('../common/responseCode')
 const moment = require('moment')

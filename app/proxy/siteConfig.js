@@ -1,5 +1,5 @@
 /**
- * Created by xuwus on 2017/3/13.
+ * Created by lxj on 2017/3/13.
  */
 const SiteConfig = require('../models/siteConfig')
 
