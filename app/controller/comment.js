@@ -3,6 +3,8 @@
  */
 const responseCode = require('../common/responseCode')
 const Comment = require('../proxy/comment')
+const User = require('../proxy/user')
+const News = require('../proxy/news')
 const errLog = '评论控制器：'
 
 /**
@@ -14,6 +16,20 @@ exports.create = async(ctx) => {
     const data = ctx.request.body
     const message = {}
     try {
+        const user = await User.getUserById(data.user_id)
+        if (!user) {
+            message.code = responseCode.FAIL
+            message.message = '关联用户不存在'
+            ctx.body = message
+            return ctx
+        }
+        const news = await News.getNewsById(data.news_id)
+        if (!news) {
+            message.code = responseCode.FAIL
+            message.message = '关联新闻不存在'
+            ctx.body = message
+            return ctx
+        }
         const comment = await Comment.createComment({
             user_id:data.user_id,
             news_id:data.news_id,
@@ -45,7 +61,28 @@ exports.update = async(ctx) => {
     const message = {}
     try {
         if (data.id) {
-            const comment = await Comment.updateComment({
+            const user = await User.getUserById(data.user_id)
+            if (!user) {
+                message.code = responseCode.FAIL
+                message.message = '关联用户不存在'
+                ctx.body = message
+                return ctx
+            }
+            const news = await News.getNewsById(data.news_id)
+            if (!news) {
+                message.code = responseCode.FAIL
+                message.message = '关联新闻不存在'
+                ctx.body = message
+                return ctx
+            }
+            let comment = await Comment.getCommentById(data.id)
+            if (!comment) {
+                message.code = responseCode.FAIL
+                message.message = '评论不存在'
+                ctx.body = message
+                return ctx
+            }
+            comment = await Comment.updateComment({
                 user_id:data.user_id,
                 news_id:data.news_id,
                 content:data.content,
@@ -54,7 +91,7 @@ exports.update = async(ctx) => {
             if (comment) {
                 message.code = responseCode.SUCCESS
                 message.message = '修改成功'
-                message.data = comment
+                message.data = await Comment.getCommentById(data.id)
             } else {
                 message.code = responseCode.FAIL
                 message.message = '修改失败'

@@ -84,16 +84,16 @@ exports.create = async(ctx) => {
             email:data.email,
             password:encipher.getMd5(data.password),
             status:data.status,
-            name:data.name,
-            phone:data.phone,
-            gender:data.gender,
-            address:data.address,
-            qq:data.qq,
-            birthday:data.birthday,
-            integral:data.integral,
-            introduction:data.introduction,
-            loginTime:data.loginTime,
-            loginIP:data.loginIP
+            name:data.name || null,
+            phone:data.phone || null,
+            gender:data.gender || null,
+            address:data.address || null,
+            qq:data.qq || null,
+            birthday:data.birthday || null,
+            integral:data.integral || null,
+            introduction:data.introduction || null,
+            loginTime:data.loginTime || null,
+            loginIP:data.loginIP || null
         })
         if (!user) {
             message.code = responseCode.FAIL
@@ -145,17 +145,17 @@ exports.update = async(ctx) => {
                 gender:data.gender,
                 address:data.address,
                 qq:data.qq,
-                birthday:data.birthday,
-                integral:data.integral,
+                birthday:data.birthday || null,
+                integral:data.integral || null,
                 introduction:data.introduction,
-                loginTime:data.loginTime,
-                loginIP:data.loginIP
+                loginTime:data.loginTime || null,
+                loginIP:data.loginIP || null
             }, data.id)
             if (!user) {
                 message.code = responseCode.FAIL
                 message.message = '修改失败'
             }
-            // user = await User.getUserById(data.id)
+            user = await User.getUserById(data.id)
             message.code = responseCode.SUCCESS
             message.message = '修改成功'
             message.data = user
