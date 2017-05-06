@@ -12,7 +12,7 @@ const errLog = '外链控制器：'
  * @returns {Promise.<void>}
  */
 exports.get = async(ctx) => {
-    const data = ctx.query
+    const data = Object.assign({}, ctx.params, ctx.query)
     const message = {}
     try {
         const links = await Links.getLinksById(data.id)

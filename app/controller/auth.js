@@ -136,7 +136,7 @@ exports.delete = async(ctx) => {
  * @returns {Promise.<void>}
  */
 exports.get = async(ctx) => {
-    const data = ctx.query
+    const data = Object.assign({}, ctx.params, ctx.query)
     const message = {}
     try {
         if (data.id) {

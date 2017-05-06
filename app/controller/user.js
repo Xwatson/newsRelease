@@ -14,7 +14,7 @@ const errLog = '用户控制器：'
  * @returns {Promise.<void>}
  */
 exports.get = async(ctx) => {
-    const data = ctx.query
+    const data = Object.assign({}, ctx.params, ctx.query)
     const message = {}
     try {
         const user = await User.getUserById(data.id)
