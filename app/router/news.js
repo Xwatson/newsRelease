@@ -13,7 +13,7 @@ router.post(`${service.admin}/news/delete`, news.delete)
 // 修改
 router.post(`${service.admin}/news/update`, news.update)
 // 查询
-router.get(`${service.admin}/news/get`, news.get)
+router.get(`${service.admin}/news/get/:id`, news.get)
 // 列表
 router.get(`${service.admin}/news/list`, news.list)
 

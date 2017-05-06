@@ -14,7 +14,7 @@ router.post(`${service.admin}/admin/delete`, admin.delete)
 // 修改
 router.post(`${service.admin}/admin/update`, admin.update)
 // 查询
-router.get(`${service.admin}/admin/get`, admin.get)
+router.get(`${service.admin}/admin/get/:id`, admin.get)
 // 列表
 router.get(`${service.admin}/admin/list`, admin.list)
 
