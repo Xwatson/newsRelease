@@ -47,7 +47,7 @@ const comment = sequelize.define('comment', {
             type: Sequelize.ENUM,
             allowNull: false,
             defaultValue:'PASS',
-            values: ['PASS', 'REJECT'] // 状态：通过，拒绝
+            values: ['PASS', 'REJECT', 'INIT'] // 状态：通过，拒绝，待审核
         }
     },
     {
