@@ -201,3 +201,43 @@ exports.list = async(ctx) => {
         throw err
     }
 }
+/**
+ * 审核
+ * @param ctx
+ * @returns {Promise.<void>}
+ */
+exports.review = async(ctx) => {
+    const data = ctx.request.body
+    const message = {}
+    try {
+        if (data.id) {
+            let comment = await Comment.getCommentById(data.id)
+            if (!comment) {
+                message.code = responseCode.FAIL
+                message.message = '评论不存在'
+                ctx.body = message
+                return ctx
+            }
+            comment = await Comment.updateComment({ status:data.status }, data.id)
+            if (!comment) {
+                message.code = responseCode.FAIL
+                message.message = '审核失败'
+                ctx.body = message
+                return ctx
+            }
+            message.code = responseCode.SUCCESS
+            message.message = '审核成功'
+            message.data = await Comment.getCommentById(data.id)
+            ctx.body = message
+            return ctx
+        } else {
+            message.code = responseCode.FAIL
+            message.message = '未找到id字段'
+            ctx.body = message
+            return ctx
+        }
+    } catch (err) {
+        console.log(`${errLog}评论审核出错：`, err)
+        throw err
+    }
+}

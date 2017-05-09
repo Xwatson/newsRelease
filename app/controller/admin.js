@@ -34,7 +34,8 @@ exports.login = async(ctx) => {
     const expires = moment().add(7,'days').valueOf()
     message.code = responseCode.SUCCESS
     message.message = '登录成功'
-    adminInfo.token = token.getToken(adminInfo.id, expires)
+    adminInfo.dataValues.authToken = token.getToken(adminInfo.id, expires)
+    adminInfo.dataValues.expireTime = expires
     message.data = adminInfo
     ctx.body = message
     return ctx
@@ -48,7 +49,7 @@ exports.create = async(ctx) => {
     const data = ctx.request.body
     const message = {}
     try {
-        let adminInfo = await Admin.getAdminByWhere({'$or':[{ adminName:data.name }, { email:data.email }] })
+        let adminInfo = await Admin.getAdminByWhere({'$or':[{ adminName:data.adminName }, { email:data.email }] })
         if (adminInfo) {
             if ((!adminInfo.dataValues.adminName || adminInfo.dataValues.adminName !== '') && adminInfo.dataValues.adminName === data.name) {
                 message.code = responseCode.FAIL
@@ -70,7 +71,7 @@ exports.create = async(ctx) => {
             return ctx
         }
         adminInfo = await Admin.create({
-            adminName:data.name,
+            adminName:data.adminName,
             email:data.email,
             auth_id:data.auth_id,
             password:encipher.getMd5(data.password),
@@ -105,29 +106,33 @@ exports.update = async(ctx) => {
     const message = {}
     try {
         if (data.id) {
-            let admin = await Admin.getAdminByWhere({'$or':[{ adminName:data.name }, { email:data.email }] })
-            if (admin) {
-                if ((!admin.dataValues.adminName || admin.dataValues.adminName !== '') && admin.dataValues.adminName === data.name) {
+            let getAdmin = await Admin.getAdminById(data.id)
+            if (!getAdmin) {
+                message.code = responseCode.FAIL
+                message.message = '管理员不存在'
+                ctx.body = message
+                return ctx
+            }
+            if (getAdmin.dataValues.adminName !== data.adminName) {
+                let admin = await Admin.getAdminByWhere({ adminName:data.adminName })//{'$or':[{ adminName:data.name }, { email:data.email }] })
+                if (admin) {
                     message.code = responseCode.FAIL
                     message.message = '账户已存在'
                     ctx.body = message
                     return ctx
-                } else if ((!admin.dataValues.email || admin.dataValues.email !== '') && admin.dataValues.email === data.email) {
+                }
+            }
+            if (getAdmin.dataValues.email !== data.email) {
+                let admin2 = await Admin.getAdminByWhere({ email:data.email })
+                if (admin2) {
                     message.code = responseCode.FAIL
                     message.message = '邮箱已被注册'
                     ctx.body = message
                     return ctx
                 }
             }
-            admin = await Admin.getAdminById(data.id)
-            if (!admin) {
-                message.code = responseCode.FAIL
-                message.message = '管理员不存在'
-                ctx.body = message
-                return ctx
-            }
             const newPwd = encipher.getMd5(data.new_password)
-            if (admin.password !== newPwd) {
+            if (getAdmin.password !== newPwd) {
                 message.code = responseCode.FAIL
                 message.message = '原始密码错误'
                 ctx.body = message
@@ -141,15 +146,16 @@ exports.update = async(ctx) => {
                 return ctx
             }
             await Admin.update({
-                adminName:data.name,
+                adminName:data.adminName,
                 email:data.email,
                 auth_id:data.auth_id,
                 password:newPwd,
                 status:data.status
             }, data.id)
+            getAdmin = await Admin.getAdminById(data.id)
             message.code = responseCode.SUCCESS
             message.message = '修改成功'
-            message.data = admin
+            message.data = getAdmin
             ctx.body = message
             return ctx
         } else {

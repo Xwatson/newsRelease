@@ -72,6 +72,7 @@ exports.updateNews = async(news, id) => {
  */
 exports.getNewsList= async(where, page, size) => {
     return await News.findAndCountAll({
+        include:[{ model: Category, required: true, as:'Category'}],
         where:where,
         offset:page,
         limit:size
