@@ -23,7 +23,7 @@ const operation = sequelize.define('operation', {
         type: { // 类型
             type: Sequelize.ENUM,
             allowNull: false,
-            values: ['CREATE', 'DELETE', 'UPDATE', 'SELECT', 'REVIEW'] // 增、删、改、查、审核
+            values: ['CREATE', 'DELETE', 'UPDATE', 'SELECT', 'REVIEW', 'SORT'] // 增、删、改、查、审核
         },
         status: { // 状态
             type: Sequelize.ENUM,
