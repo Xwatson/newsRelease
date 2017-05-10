@@ -1,5 +1,5 @@
 /**
- * Created by xuwus on 2017/4/10.
+ * Created by lxj on 2017/4/10.
  */
 const Comment = require('../models/comment')
 const News = require('../models/news')
@@ -11,7 +11,10 @@ const User = require('../models/user')
  * @returns {Promise.<void>}
  */
 exports.getCommentByName = async(name) => {
-    return await Comment.findOne({ include:[News, User] }, {
+    return await Comment.findOne({ include:[
+        { model: News, as:'News'},
+        { model: User, as:'User'}
+    ] }, {
         where:{ name:name }
     })
 }
@@ -22,7 +25,10 @@ exports.getCommentByName = async(name) => {
  * @returns {Promise.<void>}
  */
 exports.getCommentById = async(id) => {
-    return await Comment.findById(id, { include:[News, User] })
+    return await Comment.findById(id, { include:[
+        { model: News, as:'News'},
+        { model: User, as:'User'}
+    ] })
 }
 /**
  * 根据user id获取
@@ -30,7 +36,13 @@ exports.getCommentById = async(id) => {
  * @returns {Promise.<void>}
  */
 exports.getCommentByUserId = async(id) => {
-    return await Comment.findAll({ where:{ user_id:id } })
+    return await Comment.findAll({
+        include:[
+            { model: News, as:'News'},
+            { model: User, as:'User'}
+        ],
+        where:{ user_id:id }
+    })
 }
 
 /**
@@ -39,7 +51,13 @@ exports.getCommentByUserId = async(id) => {
  * @returns {Promise.<void>}
  */
 exports.getCommentBycategoryId = async(newsId) => {
-    return await Comment.findAll({ where:{ news_id:newsId } })
+    return await Comment.findAll({
+        include:[
+            { model: News, as:'News'},
+            { model: User, as:'User'}
+        ],
+        where:{ news_id:newsId }
+    })
 }
 
 /**
@@ -48,7 +66,13 @@ exports.getCommentBycategoryId = async(newsId) => {
  * @returns {Promise.<void>}
  */
 exports.getCommentBycategoryId = async(userId) => {
-    return await Comment.findAll({ where:{ user_id:userId } })
+    return await Comment.findAll({
+        include:[
+            { model: News, as:'News'},
+            { model: User, as:'User'}
+        ],
+        where:{ user_id:userId }
+    })
 }
 
 /**
@@ -88,7 +112,7 @@ exports.deleteCommentByUserId = async(id) => {
  * @returns {Promise.<void>}
  */
 exports.updateComment = async(comment, id) => {
-    return await News.update(comment, { where:{ id:id } })
+    return await Comment.update(comment, { where:{ id:id } })
 }
 /**
  * 获取所有数据
@@ -96,6 +120,10 @@ exports.updateComment = async(comment, id) => {
  */
 exports.getCommentList = async(where ,page, size) => {
     return await Comment.findAndCountAll({
+        include:[
+            { model: News, as:'News'},
+            { model: User, as:'User'}
+        ],
         where:where,
         offset:page,
         limit:size

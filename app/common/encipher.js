@@ -1,5 +1,5 @@
 /**
- * Created by xuwus on 2017/3/22.
+ * Created by lxj on 2017/3/22.
  */
 const crypto = require('crypto');
 

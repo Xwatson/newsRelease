@@ -1,5 +1,5 @@
 /**
- * Created by xuwus on 2017/4/26.
+ * Created by lxj on 2017/4/26.
  */
 const service = require('../../config/service.json')
 const user = require('../controller/user')
@@ -13,7 +13,7 @@ router.post(`${service.admin}/user/delete`, user.delete)
 // 修改
 router.post(`${service.admin}/user/update`, user.update)
 // 查询
-router.get(`${service.admin}/user/get`, user.get)
+router.get(`${service.admin}/user/get/:id`, user.get)
 // 列表
 router.get(`${service.admin}/user/list`, user.list)
 

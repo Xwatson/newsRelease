@@ -1,6 +1,6 @@
 /**
  * 评论表
- *  Created by xuwus on 2017/3/13.
+ *  Created by lxj on 2017/3/13.
  */
 const sequelize = require("./sequelize.js")
 const Sequelize = require('sequelize')
@@ -47,7 +47,7 @@ const comment = sequelize.define('comment', {
             type: Sequelize.ENUM,
             allowNull: false,
             defaultValue:'PASS',
-            values: ['PASS', 'REJECT'] // 状态：通过，拒绝
+            values: ['PASS', 'REJECT', 'INIT'] // 状态：通过，拒绝，待审核
         }
     },
     {

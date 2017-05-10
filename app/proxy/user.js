@@ -1,5 +1,5 @@
 /**
- * Created by xuwus on 2017/4/10.
+ * Created by lxj on 2017/4/10.
  */
 const User = require('../models/user')
 /**
@@ -47,7 +47,7 @@ exports.createUser = async(user) => {
  * @returns {Promise.<void>}
  */
 exports.deleteUser = async(id) => {
-    return await Links.destroy({
+    return await User.destroy({
         where:{ id:id }
     })
 }
@@ -59,5 +59,5 @@ exports.deleteUser = async(id) => {
  * @returns {Promise.<void>}
  */
 exports.updateUser = async(user, id) => {
-    return await Links.update(user, { where:{ id:id } })
+    return await User.update(user, { where:{ id:id } })
 }

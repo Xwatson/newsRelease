@@ -12,7 +12,7 @@ const errLog = '操作项控制器：'
  * @returns {Promise.<void>}
  */
 exports.get = async(ctx) => {
-    const data = ctx.query
+    const data = Object.assign({}, ctx.params, ctx.query)
     const message = {}
     try {
         const operation = await Operation.getOperationById(data.id)

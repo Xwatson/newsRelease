@@ -1,5 +1,5 @@
 /**
- * Created by xuwus on 2017/3/22.
+ * Created by lxj on 2017/3/22.
  */
 const Admin = require('../models/admin')
 const Auth = require('../models/auth')
@@ -11,7 +11,7 @@ const sequelize = require("../models/sequelize")
  */
 exports.getAdminByName = async(name) => {
     return await Admin.findOne({
-        'include': [ { model: Auth, as:'Auth'}],
+        'include': [ { model: Auth, as:'Auth', include:[{ all:true }]}],
         where: {
             adminName: name
         }
@@ -36,9 +36,8 @@ exports.getAdminByEmail = async(email) => {
  */
 exports.getAdminByWhere = async(where) => {
     return await Admin.findOne({
-        'include': [ { model: Auth, required: true, as:'Auth'}]
-    },{
-        where: where
+        'include': [ { model: Auth, required: true, as:'Auth'}],
+         where: where
     })
 }
 /**

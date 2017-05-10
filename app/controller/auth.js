@@ -32,8 +32,8 @@ exports.create = async(ctx) => {
     try {
         let auth = await Auth.getAuthByName(data.name)
         if (!auth.length) {
-            const menus = await Menu.getMenuByWhere({ id:data.menu_ids })
-            const operations = await Operation.getOperationsByWhere({ id:data.operation_ids })
+            const menus = await Menu.getMenuByWhere({ id:data.menu_ids.split(',') })
+            const operations = await Operation.getOperationsByWhere({ id:data.operation_ids.split(',') })
             auth = await Auth.create({
                 name:data.name,
                 status:data.status
@@ -82,8 +82,8 @@ exports.update = async(ctx) => {
             ctx.body = message
             return ctx
         }
-        const menus = await Menu.getMenuByWhere({ id:data.menu_ids })
-        const operations = await Operation.getOperationsByWhere({ id:data.operation_ids })
+        const menus = await Menu.getMenuByWhere({ id:data.menu_ids.split(',') })
+        const operations = await Operation.getOperationsByWhere({ id:data.operation_ids.split(',') })
         auth = await Auth.update({ name:data.name, status:data.status }, menus, operations, data.id, auth)
         if (!auth) {
             message.code = responseCode.FAIL
@@ -136,7 +136,7 @@ exports.delete = async(ctx) => {
  * @returns {Promise.<void>}
  */
 exports.get = async(ctx) => {
-    const data = ctx.query
+    const data = Object.assign({}, ctx.params, ctx.query)
     const message = {}
     try {
         if (data.id) {

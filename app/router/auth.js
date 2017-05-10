@@ -13,7 +13,7 @@ router.post(`${service.admin}/auth/delete`, auth.delete)
 // 修改
 router.post(`${service.admin}/auth/update`, auth.update)
 // 查询
-router.get(`${service.admin}/auth/get`, auth.get)
+router.get(`${service.admin}/auth/get/:id`, auth.get)
 // 列表
 router.get(`${service.admin}/auth/list`, auth.list)
 

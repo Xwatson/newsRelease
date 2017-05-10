@@ -52,7 +52,12 @@ exports.getAuthByName = async(name) => {
  * @returns {Promise.<void>}
  */
 exports.getAuthById = async(id) => {
-    return await Auth.findOne({where: {id: id}})
+    return await Auth.findOne({
+        include: [
+            { all:true }
+        ],
+        where: {id: id}
+    })
 }
 /**
  * 根据id获取权限(关联)

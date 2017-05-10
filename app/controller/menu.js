@@ -135,7 +135,7 @@ exports.delete = async(ctx) => {
  * @returns {Promise.<void>}
  */
 exports.get = async(ctx) => {
-    const data = ctx.query
+    const data = Object.assign({}, ctx.params, ctx.query)
     const message = {}
     try {
         if (data.id) {
@@ -170,7 +170,8 @@ exports.list = async(ctx) => {
     if (!data.size) data.size = 10
     const message = {}
     try {
-        const menu = await Menu.getMenus({}, parseInt(data.page) - 1, parseInt(data.size))
+        // const menu = await Menu.getMenus({}, parseInt(data.page) - 1, parseInt(data.size))
+        const menu = await Menu.getMenuByWhere({})
         if (menu) {
             message.code = responseCode.SUCCESS
             message.message = '获取成功'

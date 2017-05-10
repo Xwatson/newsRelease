@@ -1,5 +1,5 @@
 /**
- * Created by xuwus on 2017/4/11.
+ * Created by lxj on 2017/4/11.
  */
 const sequelize = require("./sequelize.js")
 const Sequelize = require('sequelize')

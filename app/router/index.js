@@ -13,8 +13,9 @@ import comment from './comment'
 import links from './links'
 import news from './news'
 import user from './user'
+import siteConfig from './siteConfig'
 
-const routes = [home, verify, admin, operation, menu, auth, category, comment, links, news, user]
+const routes = [home, verify, admin, operation, menu, auth, category, comment, links, news, user, siteConfig]
 export default (app) => {
     routes.forEach((route) => {
         app

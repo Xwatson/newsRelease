@@ -1,5 +1,5 @@
 /**
- * Created by xuwus on 2017/4/24.
+ * Created by lxj on 2017/4/24.
  */
 const responseCode = require('../common/responseCode')
 const moment = require('moment')
@@ -33,6 +33,7 @@ exports.create = async(ctx) => {
             carouselPic:data.carouselPic,
             is_carousel:data.is_carousel,
             author:data.author,
+            source:data.source,
             accessCount:1,
             status:data.status
         })
@@ -65,7 +66,7 @@ exports.update = async(ctx) => {
     try {
         if (data.id) {
             const category = await Category.getCategoryById(data.category_id)
-            if (category) {
+            if (!category) {
                 message.code = responseCode.FAIL
                 message.message = '分类不不存在'
                 ctx.body = message
@@ -88,6 +89,7 @@ exports.update = async(ctx) => {
                 carouselPic:data.carouselPic,
                 is_carousel:data.is_carousel,
                 author:data.author,
+                source:data.source,
                 // accessCount:data.accessCount,
                 status:data.status
             }, data.id)
@@ -146,7 +148,7 @@ exports.delete = async(ctx) => {
  * @returns {Promise.<void>}
  */
 exports.get = async(ctx) => {
-    const data = ctx.query
+    const data = Object.assign({}, ctx.params, ctx.query)
     const message = {}
     try {
         if (data.id) {

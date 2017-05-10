@@ -1,5 +1,5 @@
 /**
- * Created by xuwus on 2017/4/10.
+ * Created by lxj on 2017/4/10.
  */
 const News = require('../models/news')
 const Category = require('../models/category')
@@ -72,6 +72,7 @@ exports.updateNews = async(news, id) => {
  */
 exports.getNewsList= async(where, page, size) => {
     return await News.findAndCountAll({
+        include:[{ model: Category, required: true, as:'Category'}],
         where:where,
         offset:page,
         limit:size
