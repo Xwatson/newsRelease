@@ -126,8 +126,8 @@ exports.update = async(ctx) => {
                 ctx.body = message
                 return ctx
             }
-            const newPwd = encipher.getMd5(data.new_password)
-            if (admin.password !== newPwd) {
+            const password = encipher.getMd5(data.password)
+            if (admin.password !== password) {
                 message.code = responseCode.FAIL
                 message.message = '原始密码错误'
                 ctx.body = message
@@ -144,7 +144,7 @@ exports.update = async(ctx) => {
                 adminName:data.name,
                 email:data.email,
                 auth_id:data.auth_id,
-                password:newPwd,
+                password:encipher.getMd5(data.new_password),
                 status:data.status
             }, data.id)
             message.code = responseCode.SUCCESS
