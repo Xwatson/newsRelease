@@ -23,7 +23,7 @@ app.use(convert(require('koa-static')(__dirname + '/public')))
 app.use(async(ctx, next) => {
     ctx.set('Access-Control-Allow-Origin', 'http://localhost:3001') // 允许跨域
     ctx.set('Access-Control-Allow-Methods', 'GET, POST')
-    ctx.set('Access-Control-Allow-Headers', 'Origin,Cache-Control,X_Requested_With,Content-Type,Accept,authToken')
+    ctx.set('Access-Control-Allow-Headers', 'Origin,Cache-Control,X_Requested_With,X-Requested-With,Content-Type,Accept,authToken')
     ctx.set('X-Powered-By', 'Koa2')
     if (ctx.req.method === 'POST') {
         ctx.request.body = ctx.request.fields
