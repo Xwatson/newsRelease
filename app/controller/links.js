@@ -4,6 +4,7 @@
 const responseCode = require('../common/responseCode')
 const Operation = require('../proxy/operation')
 const Links = require('../proxy/links')
+const upload = require('./upload')
 const errLog = '外链控制器：'
 
 /**
@@ -164,4 +165,25 @@ exports.delete = async(ctx) => {
         console.log(`${errLog}删除操作项出错：`, err)
         throw err
     }
+}
+/**
+ * 上传
+ * @param ctx
+ * @returns {Promise.<void>}
+ */
+exports.upload = async(ctx) => {
+    const data = ctx.request.body
+    const message = {}
+    const file = await upload.upload(data.file, 'uploads/links/')
+    if (!file) {
+        message.code = responseCode.FAIL
+        message.message = '上传失败'
+        ctx.body = message
+        return ctx
+    }
+    message.code = responseCode.SUCCESS
+    message.message = '上传成功'
+    message.data = file
+    ctx.body = message
+    return ctx
 }

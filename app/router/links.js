@@ -16,5 +16,7 @@ router.post(`${service.admin}/links/update`, links.update)
 router.get(`${service.admin}/links/get/:id`, links.get)
 // 列表
 router.get(`${service.admin}/links/list`, links.list)
+// 上传
+router.post(`${service.admin}/links/upload`, links.upload)
 
 export default router

@@ -16,5 +16,10 @@ router.post(`${service.admin}/news/update`, news.update)
 router.get(`${service.admin}/news/get/:id`, news.get)
 // 列表
 router.get(`${service.admin}/news/list`, news.list)
+// 上传
+router.post(`${service.admin}/news/upload`, news.upload)
+// 编辑器上传路径
+router.get(`${service.admin}/editor/upload`, news.editorUpload)
+router.post(`${service.admin}/editor/upload`, news.editorUpload)
 
 export default router

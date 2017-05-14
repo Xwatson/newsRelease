@@ -5,6 +5,8 @@ const responseCode = require('../common/responseCode')
 const moment = require('moment')
 const News = require('../proxy/news')
 const Category = require('../proxy/category')
+const upload = require('./upload')
+const uEditorConfig = require('../../config/uEditor.json')
 const errLog = '管理员控制器：'
 
 /**
@@ -201,5 +203,57 @@ exports.list = async(ctx) => {
     } catch (err) {
         console.log(`${errLog}新闻列表出错：`, err)
         throw err
+    }
+}
+
+/**
+ * 上传
+ * @param ctx
+ * @returns {Promise.<void>}
+ */
+exports.upload = async(ctx) => {
+    const data = ctx.request.body
+    const message = {}
+    const file = await upload.upload(data.file, 'uploads/news/')
+    if (!file) {
+        message.code = responseCode.FAIL
+        message.message = '上传失败'
+        ctx.body = message
+        return ctx
+    }
+    message.code = responseCode.SUCCESS
+    message.message = '上传成功'
+    message.data = file
+    ctx.body = message
+    return ctx
+}
+/**
+ * 富文本上传
+ * @param ctx
+ * @returns {Promise.<void>}
+ */
+exports.editorUpload = async(ctx) => {
+    const query = ctx.query
+    const data = ctx.request.body || ctx.query
+    const message = {}
+    switch (query.action) {
+        case 'config':
+            ctx.body = `${query.callback}(${JSON.stringify(uEditorConfig)})`
+            return ctx
+        case 'uploadimage':
+            const file = await upload.upload(data.file, 'uploads/editor/')
+            if (!file) {
+                message.code = responseCode.FAIL
+                message.message = '上传失败'
+                ctx.body = message
+                return ctx
+            }
+            ctx.body = {
+                "state": "SUCCESS",
+                "url": file.path,
+                "title": file.name,
+                "original": file.name,
+            }
+            return ctx
     }
 }
