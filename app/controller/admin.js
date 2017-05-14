@@ -1,5 +1,5 @@
 /**
- * Created by lxj on 2017/3/22.
+ * Created by xuwus on 2017/3/22.
  */
 const responseCode = require('../common/responseCode')
 const moment = require('moment')
@@ -131,8 +131,8 @@ exports.update = async(ctx) => {
                     return ctx
                 }
             }
-            const newPwd = encipher.getMd5(data.new_password)
-            if (getAdmin.password !== newPwd) {
+            const password = encipher.getMd5(data.password)
+            if (getAdmin.password !== password) {
                 message.code = responseCode.FAIL
                 message.message = '原始密码错误'
                 ctx.body = message
@@ -149,7 +149,7 @@ exports.update = async(ctx) => {
                 adminName:data.adminName,
                 email:data.email,
                 auth_id:data.auth_id,
-                password:newPwd,
+                password:encipher.getMd5(data.new_password),
                 status:data.status
             }, data.id)
             getAdmin = await Admin.getAdminById(data.id)
