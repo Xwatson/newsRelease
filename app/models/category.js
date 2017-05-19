@@ -19,6 +19,9 @@ const category = sequelize.define('category', {
             unique: true,
             allowNull: false
         },
+        router: { // 路由地址
+            type: Sequelize.STRING
+        },
         parent_id: { // 上级分类
             type: Sequelize.INTEGER,
             defaultValue:0

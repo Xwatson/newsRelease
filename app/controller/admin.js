@@ -131,12 +131,16 @@ exports.update = async(ctx) => {
                     return ctx
                 }
             }
-            const password = encipher.getMd5(data.password)
-            if (getAdmin.password !== password) {
-                message.code = responseCode.FAIL
-                message.message = '原始密码错误'
-                ctx.body = message
-                return ctx
+            let isUpdatePwd = false
+            if (data.password) {
+                isUpdatePwd = true
+                const password = encipher.getMd5(data.password)
+                if (getAdmin.dataValues.password !== password) {
+                    message.code = responseCode.FAIL
+                    message.message = '原始密码错误'
+                    ctx.body = message
+                    return ctx
+                }
             }
             const auth = await Auth.getAuthById(data.auth_id)
             if (!auth) {
@@ -149,7 +153,7 @@ exports.update = async(ctx) => {
                 adminName:data.adminName,
                 email:data.email,
                 auth_id:data.auth_id,
-                password:encipher.getMd5(data.new_password),
+                password:isUpdatePwd ? encipher.getMd5(data.new_password) : getAdmin.dataValues.password,
                 status:data.status
             }, data.id)
             getAdmin = await Admin.getAdminById(data.id)

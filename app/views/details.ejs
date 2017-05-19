@@ -1,0 +1,108 @@
+<% include header %>
+<div class="news-details">
+    <div class="col-xs-12">
+        <ol class="breadcrumb">
+            <li><a href="/">首页</a></li>
+            <% if(currentCate) { %>
+            <li><a href="/nav<%= currentCate.router %>"><%= currentCate.name %></a></li>
+            <% } %>
+            <li class="active">新闻详情</li>
+        </ol>
+        <hr style="margin-top: 10px">
+    </div>
+    <div class="row">
+        <% if(news) { %>
+        <div class="col-sm-12">
+            <div class="nd-title">
+                <h3><%= news.title %></h3>
+            </div>
+            <div class="nd-author">
+                <p>作者： <%= news.author %></p>
+                <p>来源： <%= news.source %></p>
+                <p><%= news.updatedAt | 'YYYY-MM-DD HH:mm:ss' %></p>
+                <p>访问数： <%= news.accessCount %></p>
+            </div>
+            <div class="nd-summary">
+                <%= news.summary %>
+            </div>
+            <div class="jiathis_style">
+                <span class="jiathis_txt" style="color: #229344;">分享到：</span>
+                <a class="jiathis_button_weixin">微信</a>
+                <a class="jiathis_button_tsina">新浪微博</a>
+                <a class="jiathis_button_cqq">QQ好友</a>
+                <a href="http://www.jiathis.com/share?uid=1737017" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+                <a class="jiathis_counter_style"></a>
+            </div>
+            <div class="nd-content">
+                <%= news.content %>
+            </div>
+            <div class="nd-comment">
+                <h5>网友评价：</h5>
+                <% if(comment) { %>
+                <ul class="nd-comment-list">
+                    <% comment.forEach((item, i) => {
+                        item = item.dataValues
+                    %>
+                    <li>
+                        <div class="nd-comment-avatar">
+                            <img src="<%= item.User.headPortrait || '/images/user-default.png' %>" >
+                        </div>
+                        <div class="nd-comment-content">
+                            <p><%= item.User.nickName %>:</p>
+                            <p><span><%= item.createdAt | 'YYYY年MM月DD日 HH:mm:ss' %></span><span><%= i+1 %>楼</span></p>
+                            <p><%= item.content %></p>
+                        </div>
+                    </li>
+                    <% }) %>
+                </ul>
+                <% } else { %>
+                <div class="nd-comment-empty">暂无评论</div>
+                <% } %>
+                <div class="nd-comment-input">
+                    <textarea class="form-control" id="comment-text" rows="3" placeholder="<%= user ? '请输入评论内容' : '抵制低俗，文明上网，登录发帖。' %>"></textarea>
+                    <p>
+                        <% if(user) { %>
+                            <button type="button" class="btn btn-success" id="comment-submit">评论</button>
+                        <% } else { %>
+                            <a type="button" class="btn btn-success" href="/login">登录</a>
+                        <% } %>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <% } %>
+    </div>
+</div>
+<script type="text/javascript">
+    var jiathis_config = {data_track_clickback:'true'};
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code_mini/jia.js?uid=1358928869896764" charset="utf-8"></script>
+<script>
+    $('#comment-submit').on('click', function () {
+        var content = $('#comment-text').text()
+        if ($.trim(content) !== '') {
+            $.ajax({
+                url:'/comment/submit',
+                type:'post',
+                data:{ news_id:1, content:content },
+                success:function (data) {
+                    if (data.code === 1) {
+                        alert('评论成功')
+                        window.location.reload()
+                    } else {
+                        alert(data.message)
+                        if (data.code === 1002) {
+                            window.location = '/login'
+                        }
+                    }
+                },
+                error:function (err) {
+                    alert('评论失败，请联系管理员！')
+                }
+            })
+        } else {
+            alert('请输入评论内容')
+        }
+    })
+</script>
+<% include footer %>

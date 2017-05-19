@@ -1,0 +1,55 @@
+<% include header %>
+<div class="row">
+
+    <div class="col-xs-12 col-sm-9">
+        <div class="col-xs-12">
+            <a href="/">首页</a><span class="text-muted"> > 新闻搜索</span>
+            <hr style="margin-top: 10px">
+        </div>
+        <% news.rows.forEach((item) => {
+            item = item.dataValues
+        %>
+        <div class="col-xs-12 news-category-list">
+            <dl>
+                <dt>
+                    <a href="/details/<%= item.id %>"><img width="177" height="116" src="<%= item.carouselPic %>"
+                                                           alt="<%= item.title %>"></a>
+                </dt>
+                <dd>
+                    <p><a href="/details/<%= item.id %>"><%= item.title.length > 38 ? item.title.substr(0, 38) + '...' : item.title  %></a></p>
+                    <p><span><%= item.author %></span> <span><%= item.keyWords %></span><%= item.updatedAt | 'YYYY-MM-DD HH:mm:ss' %></p>
+                    <p>
+                        <a href="/details/<%= item.id %>">
+                            <%= item.summary %>
+                        </a>
+                    </p>
+                </dd>
+            </dl>
+        </div>
+        <% }) %>
+        <% if(!news.rows.length) {%>
+        <div class="news-empty">
+            没有找到相关新闻~
+        </div>
+        <% } %>
+        <div class="col-xs-12 news-pagination">
+            <% if (paging.length) { %>
+            <ul class="pagination">
+                <li><a href="?page=1" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                <% paging.forEach((p) => { %>
+                <li class="<%= p.current ? 'active' : p.page === '...' ? ' disabled' : '' %>">
+                    <a href="?page=<%= p.page %>"><%= p.page %>
+                        <%- p.current ? '<span class="sr-only">(current)</span>' : ''%>
+                    </a>
+                </li>
+                <% }) %>
+                <li><a href="?page=<%= news.count %>" aria-label="Previous"><span aria-hidden="true">&raquo;</span></a></li>
+            </ul>
+            <% } %>
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-3 sidebar-offcanvas news-right-banner">
+        <img src="/images/C_rightbanner1.png" alt="">
+    </div>
+</div>
+<% include footer %>

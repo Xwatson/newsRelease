@@ -24,6 +24,7 @@ exports.create = async(ctx) => {
         const max = await Category.max('sort', { where:{ parent_id:data.parent_id || 0 } })
         category = await Category.createCategory({
             name:data.name,
+            router:data.router,
             is_nav:data.is_nav,
             sort:max || 0,
             parent_id:data.parent_id || 0,
@@ -65,6 +66,7 @@ exports.update = async(ctx) => {
             category = await Category.updateCategory({
                 name:data.name,
                 is_nav:data.is_nav,
+                router:data.router,
                 // sort:max || 0,
                 parent_id:data.parent_id || 0,
                 status:data.status

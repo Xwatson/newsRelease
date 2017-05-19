@@ -44,6 +44,20 @@ exports.getCommentByUserId = async(id) => {
         where:{ user_id:id }
     })
 }
+/**
+ * 根据news id获取
+ * @param id
+ * @returns {Promise.<void>}
+ */
+exports.getCommentByNewsId = async(id, options) => {
+    return await Comment.findAll({
+        include:[
+            { model: User, as:'User'}
+        ],
+        where:{ news_id:id },
+        ...options
+    })
+}
 
 /**
  * 根据新闻id获取

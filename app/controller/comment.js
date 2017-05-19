@@ -7,6 +7,44 @@ const User = require('../proxy/user')
 const News = require('../proxy/news')
 const errLog = '评论控制器：'
 
+exports.submit = async(ctx) => {
+    const data = ctx.request.body
+    const message = {}
+    try {
+        if (!ctx.session.user) {
+            message.code = responseCode.AUTH_EXPIRED
+            message.message = '登录超时，请重新登录'
+            ctx.body = message
+            return ctx
+        }
+        const news = await News.getNewsById(data.news_id)
+        if (!news) {
+            message.code = responseCode.FAIL
+            message.message = '新闻不存在'
+            ctx.body = message
+            return ctx
+        }
+        const comment = await Comment.createComment({
+            user_id:ctx.session.user.id,
+            news_id:data.news_id,
+            content:data.content,
+            status:'PASS' // 默认审核通过
+        })
+        if (comment) {
+            message.code = responseCode.SUCCESS
+            message.message = '评论成功'
+            message.data = comment
+        } else {
+            message.code = responseCode.FAIL
+            message.message = '评论失败，请重试！'
+        }
+        ctx.body = message
+        return ctx
+    } catch (err) {
+        console.log(`${errLog}添加评论出错：`, err)
+        throw err
+    }
+}
 /**
  * 创建
  * @param ctx

@@ -1,11 +1,329 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>EJS Welcome to <%= title %></p>
-  </body>
-</html>
+<% include header %>
+<div class="row row-offcanvas row-offcanvas-right">
+
+    <div class="col-xs-12 col-sm-9">
+        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <% topCarousel.forEach((item, i) => {
+                    item = item.dataValues
+                %>
+                    <li data-target="#carousel-example-generic" data-slide-to="<%= i%>" <%= i === 0 ? 'class="active"' : '' %> ></li>
+                <% }) %>
+            </ol>
+
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner" role="listbox">
+                <% topCarousel.forEach((item, i) => {
+                    item = item.dataValues
+                %>
+                    <div class="item <%= i === 0 ? 'active' : '' %> >">
+                        <a href="/details/<%= item.id %>">
+                            <img src="<%= item.carouselPic %>" alt="<%= item.title %>">
+                            <div class="carousel-caption">
+                                <%= item.title %>
+                            </div>
+                        </a>
+                    </div>
+                <% }) %>
+            </div>
+
+            <!-- Controls -->
+            <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+        <div class="page-header">
+            <h4>热点新闻</h4>
+        </div>
+        <div class="row">
+            <% topCarousel.forEach((item, i) => {
+               item = item.dataValues
+            %>
+                <div class="col-xs-12 col-lg-6 news-graphic">
+                    <dl>
+                        <dt>
+                            <a href="/details/<%= item.id %>"><img class="ng-img" src="<%= item.carouselPic %>" alt="<%= item.title %>"></a>
+                        </dt>
+                        <dd class="ng-title">
+                            <p><a href="/details/<%= item.id %>"><%= item.title %></a></p>
+                            <p><a href="/details/<%= item.id %>" role="button"><%= item.summary %></a></p>
+                        </dd>
+                    </dl>
+                </div>
+            <% }) %>
+        </div>
+        <div class="col-xs-12 col-lg-6">
+            <div class="page-header">
+                <h4>国内</h4>
+                <a class="text-muted" href="/nav/domestic">更多>></a>
+            </div>
+            <% if (domesticNews.length) { %>
+
+            <div class="col-xs-12 news-graphic">
+                <dl>
+                    <dt>
+                        <a href="/details/<%= domesticNews[0].id %>"><img class="ng-img" src="<%= domesticNews[0].carouselPic %>" alt="<%= domesticNews[0].title %>"></a>
+                    </dt>
+                    <dd class="ng-title">
+                        <p><a href="/details/<%= domesticNews[0].id %>"><%= domesticNews[0].title %></a></p>
+                        <p><a href="#" role="button"><%= domesticNews[0].summary %> </a></p>
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-xs-12 news-text-list">
+                <ul>
+                    <% if (domesticNews.length > 1) {
+                        for (var i = 1;i< domesticNews.length; i++){
+                    %>
+                    <li><a href="/details/<%= domesticNews[i].id %>" title="<%= domesticNews[i].title %>">▪ <%= domesticNews[i].title %></a></li>
+                    <% }} %>
+                </ul>
+            </div>
+            <% } %>
+        </div>
+        <div class="col-xs-12 col-lg-6">
+            <div class="page-header">
+                <h4>国际</h4>
+                <a class="text-muted" href="/nav/international">更多>></a>
+            </div>
+            <% if (internationalNews.length) { %>
+
+            <div class="col-xs-12 news-graphic">
+                <dl>
+                    <dt>
+                        <a href="/details/<%= internationalNews[0].id %>"><img class="ng-img" src="<%= internationalNews[0].carouselPic %>" alt="<%= internationalNews[0].title %>"></a>
+                    </dt>
+                    <dd class="ng-title">
+                        <p><a href="/details/<%= internationalNews[0].id %>"><%= internationalNews[0].title %></a></p>
+                        <p><a href="#" role="button"><%= internationalNews[0].summary %> </a></p>
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-xs-12 news-text-list">
+                <ul>
+                    <% if (internationalNews.length > 1) {
+                    for (var i = 1;i< internationalNews.length; i++){
+                    %>
+                    <li><a href="/details/<%= internationalNews[i].id %>" title="<%= internationalNews[i].title %>">▪ <%= internationalNews[i].title %></a></li>
+                    <% }} %>
+                </ul>
+            </div>
+            <% } %>
+        </div>
+        <div class="col-xs-12 col-lg-12 news-banner-lg">
+            <img src="/images/bannerA.jpg" alt="">
+        </div>
+        <div class="col-xs-12 col-lg-6">
+            <div class="page-header">
+                <h4>军事</h4>
+                <a class="text-muted" href="/nav/military">更多>></a>
+            </div>
+            <% if (militaryNews.length) { %>
+
+            <div class="col-xs-12 news-graphic">
+                <dl>
+                    <dt>
+                        <a href="/details/<%= militaryNews[0].id %>"><img class="ng-img" src="<%= militaryNews[0].carouselPic %>"
+                                                                          alt="<%= militaryNews[0].title %>"></a>
+                    </dt>
+                    <dd class="ng-title">
+                        <p><a href="/details/<%= militaryNews[0].id %>"><%= militaryNews[0].title %></a></p>
+                        <p><a href="#" role="button"><%= militaryNews[0].summary %> </a></p>
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-xs-12 news-text-list">
+                <ul>
+                    <% if (militaryNews.length > 1) {
+                    for (var i = 1;i< militaryNews.length; i++){
+                    %>
+                    <li><a href="/details/<%= militaryNews[i].id %>" title="<%= militaryNews[i].title %>">▪ <%= militaryNews[i].title %></a></li>
+                    <% }} %>
+                </ul>
+            </div>
+            <% } %>
+        </div>
+        <div class="col-xs-12 col-lg-6">
+            <div class="page-header">
+                <h4>社会</h4>
+                <a class="text-muted" href="/nav/society">更多>></a>
+            </div>
+            <% if (societyNews.length) { %>
+
+            <div class="col-xs-12 news-graphic">
+                <dl>
+                    <dt>
+                        <a href="/details/<%= societyNews[0].id %>"><img class="ng-img" src="<%= societyNews[0].carouselPic %>"
+                                                                          alt="<%= societyNews[0].title %>"></a>
+                    </dt>
+                    <dd class="ng-title">
+                        <p><a href="/details/<%= societyNews[0].id %>"><%= societyNews[0].title %></a></p>
+                        <p><a href="#" role="button"><%= societyNews[0].summary %> </a></p>
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-xs-12 news-text-list">
+                <ul>
+                    <% if (societyNews.length > 1) {
+                    for (var i = 1;i< societyNews.length; i++){
+                    %>
+                    <li><a href="/details/<%= societyNews[i].id %>" title="<%= societyNews[i].title %>">▪ <%= societyNews[i].title %></a></li>
+                    <% }} %>
+                </ul>
+            </div>
+            <% } %>
+        </div>
+        <div class="col-xs-12 col-lg-12 news-banner-lg">
+            <img src="/images/bannerC.jpg" alt="">
+        </div>
+        <div class="col-xs-12 col-lg-6">
+            <div class="page-header">
+                <h4>科技</h4>
+                <a class="text-muted" href="/nav/technology">更多>></a>
+            </div>
+            <% if (technologyNews.length) { %>
+
+            <div class="col-xs-12 news-graphic">
+                <dl>
+                    <dt>
+                        <a href="/details/<%= technologyNews[0].id %>"><img class="ng-img" src="<%= technologyNews[0].carouselPic %>"
+                                                                         alt="<%= technologyNews[0].title %>"></a>
+                    </dt>
+                    <dd class="ng-title">
+                        <p><a href="/details/<%= technologyNews[0].id %>"><%= technologyNews[0].title %></a></p>
+                        <p><a href="#" role="button"><%= technologyNews[0].summary %> </a></p>
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-xs-12 news-text-list">
+                <ul>
+                    <% if (technologyNews.length > 1) {
+                    for (var i = 1;i< technologyNews.length; i++){
+                    %>
+                    <li><a href="/details/<%= technologyNews[i].id %>" title="<%= technologyNews[i].title %>">▪ <%= technologyNews[i].title %></a></li>
+                    <% }} %>
+                </ul>
+            </div>
+            <% } %>
+        </div>
+        <div class="col-xs-12 col-lg-6">
+            <div class="page-header">
+                <h4>娱乐</h4>
+                <a class="text-muted" href="/nav/entertainment">更多>></a>
+            </div>
+            <% if (entertainmentNews.length) { %>
+
+            <div class="col-xs-12 news-graphic">
+                <dl>
+                    <dt>
+                        <a href="/details/<%= entertainmentNews[0].id %>"><img class="ng-img" src="<%= entertainmentNews[0].carouselPic %>"
+                                                                            alt="<%= entertainmentNews[0].title %>"></a>
+                    </dt>
+                    <dd class="ng-title">
+                        <p><a href="/details/<%= entertainmentNews[0].id %>"><%= entertainmentNews[0].title %></a></p>
+                        <p><a href="#" role="button"><%= entertainmentNews[0].summary %> </a></p>
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-xs-12 news-text-list">
+                <ul>
+                    <% if (entertainmentNews.length > 1) {
+                    for (var i = 1;i< entertainmentNews.length; i++){
+                    %>
+                    <li><a href="/details/<%= entertainmentNews[i].id %>" title="<%= entertainmentNews[i].title %>">▪ <%= entertainmentNews[i].title %></a></li>
+                    <% }} %>
+                </ul>
+            </div>
+            <% } %>
+        </div>
+        <div class="col-xs-12 col-lg-12 news-banner-lg">
+            <img src="/images/bannerB.jpg" alt="">
+        </div>
+        <div class="col-xs-12 col-lg-6">
+            <div class="page-header">
+                <h4>财经</h4>
+                <a class="text-muted" href="/nav/finance">更多>></a>
+            </div>
+            <% if (financeNews.length) { %>
+
+            <div class="col-xs-12 news-graphic">
+                <dl>
+                    <dt>
+                        <a href="/details/<%= financeNews[0].id %>"><img class="ng-img" src="<%= financeNews[0].carouselPic %>"
+                                                                               alt="<%= financeNews[0].title %>"></a>
+                    </dt>
+                    <dd class="ng-title">
+                        <p><a href="/details/<%= financeNews[0].id %>"><%= financeNews[0].title %></a></p>
+                        <p><a href="#" role="button"><%= financeNews[0].summary %> </a></p>
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-xs-12 news-text-list">
+                <ul>
+                    <% if (financeNews.length > 1) {
+                    for (var i = 1;i< financeNews.length; i++){
+                    %>
+                    <li><a href="/details/<%= financeNews[i].id %>" title="<%= financeNews[i].title %>">▪ <%= financeNews[i].title %></a></li>
+                    <% }} %>
+                </ul>
+            </div>
+            <% } %>
+        </div>
+        <div class="col-xs-12 col-lg-6">
+            <div class="page-header">
+                <h4>体育</h4>
+                <a class="text-muted" href="/nav/sports">更多>></a>
+            </div>
+            <% if (sportsNews.length) { %>
+
+            <div class="col-xs-12 news-graphic">
+                <dl>
+                    <dt>
+                        <a href="/details/<%= sportsNews[0].id %>"><img class="ng-img" src="<%= sportsNews[0].carouselPic %>"
+                                                                         alt="<%= sportsNews[0].title %>"></a>
+                    </dt>
+                    <dd class="ng-title">
+                        <p><a href="/details/<%= sportsNews[0].id %>"><%= sportsNews[0].title %></a></p>
+                        <p><a href="#" role="button"><%= sportsNews[0].summary %> </a></p>
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-xs-12 news-text-list">
+                <ul>
+                    <% if (sportsNews.length > 1) {
+                    for (var i = 1;i< sportsNews.length; i++){
+                    %>
+                    <li><a href="/details/<%= sportsNews[i].id %>" title="<%= sportsNews[i].title %>">▪ <%= sportsNews[i].title %></a></li>
+                    <% }} %>
+                </ul>
+            </div>
+            <% } %>
+        </div>
+        <div class="col-xs-12 col-lg-12 news-banner-lg">
+            <img src="/images/bannerC.jpg" alt="">
+        </div>
+    </div>
+
+    <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
+        <div class="list-group">
+            <a href="#" class="list-group-item active">最新资讯</a>
+            <% newsOptional.forEach((item) => {
+                item = item.dataValues
+            %>
+            <a href="/details/<%= item.id %>" class="list-group-item" title="<%= item.title %>"><%= item.title %></a>
+            <%})%>
+        </div>
+    </div>
+    <div class="col-xs-6 col-sm-3 sidebar-offcanvas news-right-banner">
+        <img src="/images/C_rightbanner1.png" alt="">
+    </div>
+</div>
+
+<hr>
+<% include footer %>

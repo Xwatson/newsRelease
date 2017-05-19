@@ -6,6 +6,8 @@ const comment = require('../controller/comment')
 import Router from 'koa-router'
 const router = new Router()
 
+// 评论提交
+router.post(`/comment/submit`, comment.submit)
 // 创建
 router.post(`${service.admin}/comment/create`, comment.create)
 // 删除

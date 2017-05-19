@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/bootstrap/css/bootstrap.min.css' />
+    <link rel='stylesheet' href='/stylesheets/login.css' />
+</head>
+<body>
+<div class="container">
+
+    <form class="form-signin" onsubmit="return submitLogin(event)">
+        <h2 class="form-signin-heading">登录</h2>
+        <label for="inputEmail" class="sr-only">邮箱</label>
+        <input type="email" name="email" id="inputEmail" class="form-control" placeholder="邮箱" required autofocus>
+        <label for="inputPassword" class="sr-only">密码</label>
+        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="密码" minlength="6" required>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" value="remember-me" checked> 记住我
+            </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
+    </form>
+
+</div>
+<script src="/js/jquery.min.js"></script>
+<script>
+    function submitLogin(e) {
+        e.preventDefault()
+        var email = $('.form-signin [name="email"]').val()
+        var password = $('.form-signin [name="password"]').val()
+        $.ajax({
+            url:'/login',
+            type:'post',
+            data:{ email:email, password:password },
+            success:function (data) {
+                if (data.code === 1) {
+                    window.location = '/'
+                } else {
+                    alert(data.message)
+                }
+            },
+            error:function (err) {
+                alert('登录失败，请联系管理员！')
+            }
+        })
+        return false
+    }
+</script>
+</body>
+</html>

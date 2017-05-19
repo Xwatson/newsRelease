@@ -14,6 +14,15 @@ exports.getNewsByName = async(name) => {
         where:{ name:name }
     })
 }
+/**
+ * 根据where获取新闻
+ * @param where
+ * @returns {Promise.<void>}
+ */
+exports.getNewsByWhere = async(where, options) => {
+    options = options || {}
+    return await News.findAll({ where:where, ...options })
+}
 
 /**
  * 根据id获取新闻
@@ -76,5 +85,22 @@ exports.getNewsList= async(where, page, size) => {
         where:where,
         offset:page,
         limit:size
+    })
+}
+/**
+ * 获取所有
+ * @param id
+ * @param where
+ * @param page
+ * @param size
+ * @returns {Promise.<menu>}
+ */
+exports.getNewsListNoCategory= async(where, page, size, options) => {
+    options = options || {}
+    return await News.findAndCountAll({
+        where:where,
+        offset:page,
+        limit:size,
+        ...options
     })
 }

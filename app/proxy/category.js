@@ -115,3 +115,7 @@ exports.getCategorys= async(where ,page, size) => {
         limit:size
     })
 }
+
+exports.getCategoryByWhere = async(where) => {
+    return await Category.findAll(where)
+}

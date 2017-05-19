@@ -9,11 +9,15 @@ import onerror from 'koa-onerror'
 import body from 'koa-better-body'
 import logger from 'koa-logger'
 import router from './app/router'
+import session from "koa2-cookie-session"
 
 onerror(app)
 
 // middlewares
 // app.use(convert(Bodyparser()))
+app.use(session({
+    key: "NEWS_RELEASE_SESSION"
+}))
 app.use(convert(body()))
 app.use(convert(json()))
 app.use(convert(logger()))
@@ -21,7 +25,7 @@ app.use(convert(require('koa-static')(__dirname + '/public')))
 
 // 设置Header，这个header会输出给浏览器客户端，表明这个框架是什么生成的，可以自行修改
 app.use(async(ctx, next) => {
-    ctx.set('Access-Control-Allow-Origin', 'http://localhost:3001') // 允许跨域
+    ctx.set('Access-Control-Allow-Origin', '*') // 允许跨域
     ctx.set('Access-Control-Allow-Methods', 'GET, POST')
     ctx.set('Access-Control-Allow-Headers', 'Origin,Cache-Control,X_Requested_With,X-Requested-With,Content-Type,Accept,authToken')
     ctx.set('X-Powered-By', 'Koa2')
