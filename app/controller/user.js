@@ -136,7 +136,7 @@ exports.updateHeadPortrait = async(ctx) => {
     if (!ctx.session.user) {
         message.code = responseCode.AUTH_EXPIRED
         message.message = '登录超时，请重新登录'
-        ctx.body = message
+        ctx.body = `<script>alert('${message.message}');window.history.go(-1);</script>`
         return ctx
     }
     let file = null
@@ -145,9 +145,14 @@ exports.updateHeadPortrait = async(ctx) => {
         if (!file) {
             message.code = responseCode.FAIL
             message.message = '上传图片失败'
-            ctx.body = message
+            ctx.body = `<script>alert('${message.message}');window.history.go(-1);</script>`
             return ctx
         }
+    } else {
+        message.code = responseCode.FAIL
+        message.message = '请选择图片'
+        ctx.body = `<script>alert('${message.message}');window.history.go(-1);</script>`
+        return ctx
     }
     let user = await User.updateUser({
         headPortrait:file ? file.path : '/images/user-default.png'
@@ -161,7 +166,7 @@ exports.updateHeadPortrait = async(ctx) => {
         message.code = responseCode.FAIL
         message.message = '修改失败，请重试！'
     }
-    ctx.body = message
+    ctx.body = `<script>alert('${message.message}');window.history.go(-1);</script>`
     return ctx
 }
 /**

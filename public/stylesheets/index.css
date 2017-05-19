@@ -171,6 +171,7 @@
     width: 60%;
     color: #666666;
     margin: 10px auto;
+    text-align: center;
 }
 .news-details .jiathis_style{
     display: flex;
@@ -180,7 +181,6 @@
 .news-details .nd-content{
     margin: 20px 0;
     padding: 15px 5px;
-    border-top: 1px solid #e8e8e9;
 }
 .news-details .nd-comment-list p{
     margin: 0;
@@ -230,6 +230,10 @@
     position: absolute;
     bottom: 0;
 }
+.nd-comment{
+    margin-top: 10px;
+    border-top: 1px solid #e8e8e9;
+}
 .nd-comment-empty{
     width: 60%;
     text-align: center;
@@ -254,16 +258,27 @@
     font-size: 16px;
 }
 .news-account{
-    background-color: #eee;
+}
+.na-left{
+    width: 12%;
+}
+.na-left ul, .na-left li{
+    list-style: none;
+}
+.na-left li{
+    margin: 10px 0;
 }
 .news-account .na-right{
-    background-color: white;
+    border-left: 1px solid #cccccc;
 }
 .form-error{
     display: none;
 }
 .has-error .form-error{
     display: block;
+    color: red;
+    height: 36px;
+    line-height: 36px;
 }
 .na-right > div{
     display: none;

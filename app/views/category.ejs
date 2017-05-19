@@ -20,7 +20,7 @@
                 </dt>
                 <dd>
                     <p><a href="/details/<%= item.id %>"><%= item.title.length > 38 ? item.title.substr(0, 38) + '...' : item.title  %></a></p>
-                    <p><span><%= item.author %></span> <span><%= item.keyWords %></span><%= item.updatedAt | 'YYYY-MM-DD HH:mm:ss' %></p>
+                    <p><span><%= item.author %></span> <span><%= item.keyWords %></span><%= moment(item.updatedAt).format('YYYY-MM-DD HH:mm:ss') %></p>
                     <p>
                         <a href="/details/<%= item.id %>">
                             <%= item.summary %>

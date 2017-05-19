@@ -19,7 +19,7 @@
             <div class="nd-author">
                 <p>作者： <%= news.author %></p>
                 <p>来源： <%= news.source %></p>
-                <p><%= news.updatedAt | 'YYYY-MM-DD HH:mm:ss' %></p>
+                <p><%= moment(news.updatedAt).format('YYYY-MM-DD HH:mm:ss') %></p>
                 <p>访问数： <%= news.accessCount %></p>
             </div>
             <div class="nd-summary">
@@ -34,7 +34,7 @@
                 <a class="jiathis_counter_style"></a>
             </div>
             <div class="nd-content">
-                <%= news.content %>
+                <%- news.content %>
             </div>
             <div class="nd-comment">
                 <h5>网友评价：</h5>
@@ -49,7 +49,7 @@
                         </div>
                         <div class="nd-comment-content">
                             <p><%= item.User.nickName %>:</p>
-                            <p><span><%= item.createdAt | 'YYYY年MM月DD日 HH:mm:ss' %></span><span><%= i+1 %>楼</span></p>
+                            <p><span><%= moment(item.createdAt).format('YYYY年MM月DD日 HH:mm:ss') %></span><span><%= i+1 %>楼</span></p>
                             <p><%= item.content %></p>
                         </div>
                     </li>
@@ -79,7 +79,7 @@
 <script type="text/javascript" src="http://v3.jiathis.com/code_mini/jia.js?uid=1358928869896764" charset="utf-8"></script>
 <script>
     $('#comment-submit').on('click', function () {
-        var content = $('#comment-text').text()
+        var content = $('#comment-text').val()
         if ($.trim(content) !== '') {
             $.ajax({
                 url:'/comment/submit',

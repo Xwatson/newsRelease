@@ -4,7 +4,7 @@
 import Router from 'koa-router'
 const router = new Router()
 
-import { home, category, details, login, register, account } from '../controller/pages'
+import { home, category, details, login, register, search, account } from '../controller/pages'
 
 router.get('/', home)
 router.get('/nav/:category', category)

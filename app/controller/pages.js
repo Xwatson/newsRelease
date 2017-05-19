@@ -2,6 +2,7 @@ const SiteConfig = require('../proxy/siteConfig')
 const Category = require('../proxy/category')
 const News = require('../proxy/news')
 const Comment = require('../proxy/comment')
+const moment = require('moment')
 // 首页
 export async function home(ctx) {
     const site = await getSite(ctx.originalUrl)
@@ -55,6 +56,7 @@ export async function category(ctx) {
 
     return await ctx.render('category', {
         ...site,
+        moment:moment,
         user:ctx.session.user,
         currentCate:currentCate,
         news:news,
@@ -68,7 +70,7 @@ export async function details(ctx) {
     let news = null
     let comment = null
     let router = ''
-    if (!id) {
+    if (id) {
         news = await News.getNewsById(id)
         if (news) {
             news = news.dataValues
@@ -82,6 +84,7 @@ export async function details(ctx) {
     const currentCate = site.category.find((f) => f.router === router )
     return await ctx.render('details', {
         ...site,
+        moment:moment,
         user:ctx.session.user,
         news:news,
         comment:comment,
@@ -108,6 +111,7 @@ export async function search(ctx) {
 
     return await ctx.render('search', {
         ...site,
+        moment:moment,
         user:ctx.session.user,
         currentCate:currentCate,
         news:news,
@@ -136,6 +140,7 @@ export async function account(ctx) {
     const site = await getSite('/')
     return await ctx.render('account', {
         ...site,
+        moment:moment,
         user:ctx.session.user,
         title:`个人中心`
     })
