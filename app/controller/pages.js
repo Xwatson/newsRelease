@@ -87,7 +87,7 @@ export async function details(ctx) {
         moment:moment,
         user:ctx.session.user,
         news:news,
-        comment:comment.dataValues,
+        comment:comment,
         currentCate:currentCate,
         title:`${site.title}-新闻详情`
     })
