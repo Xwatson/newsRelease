@@ -132,11 +132,11 @@ exports.updateComment = async(comment, id) => {
  * 获取所有数据
  * @returns {Promise.<menu>}
  */
-exports.getCommentList = async(where ,page, size) => {
+exports.getCommentList = async(where ,page, size, newsWhere, userWhere) => {
     return await Comment.findAndCountAll({
         include:[
-            { model: News, as:'News'},
-            { model: User, as:'User'}
+            { model: News, as:'News', where:newsWhere },
+            { model: User, as:'User', where:userWhere }
         ],
         where:where,
         offset:page,

@@ -17,14 +17,15 @@ const errLog = '管理员控制器：'
 exports.login = async(ctx) => {
     const data = ctx.request.body
     const message = {}
-    const adminInfo = await Admin.getAdminByName(data.name)
+    let adminInfo = await Admin.getAdminByWhere({ adminName:data.name, status:'ENABLED' })
     if (!adminInfo) {
         message.code = responseCode.FAIL
         message.message = '账户不存在'
         ctx.body = message
         return ctx
     }
-    if (encipher.getMd5(data.password) !== adminInfo.password) {
+    adminInfo = adminInfo[0]
+    if (encipher.getMd5(data.password) !== adminInfo.dataValues.password) {
         message.code = responseCode.FAIL
         message.message = '密码错误'
         ctx.body = message
@@ -190,6 +191,12 @@ exports.delete = async(ctx) => {
                 ctx.body = message
                 return ctx
             }
+            if (admin.dataValues.adminName === 'admin') {
+                message.code = responseCode.FAIL
+                message.message = '超级管理员不可删除'
+                ctx.body = message
+                return ctx
+            }
             await Admin.delete(data.id)
             message.code = responseCode.SUCCESS
             message.message = '删除成功'
@@ -245,9 +252,34 @@ exports.list = async(ctx) => {
     const data = ctx.query
     if (!data.page) data.page = 1
     if (!data.size) data.size = 10
+    const where = {
+        adminName:data.adminName,
+        email:data.email,
+        auth_id:data.auth_id,
+        status:data.status,
+        createdAt:data.createdAt
+    }
+    Object.keys(where).forEach((key) => {
+        if (!where[key]) {
+            delete where[key]
+        }
+    })
+    if (where.createdAt) {
+        const _times = where.createdAt.split('|')
+        where.createdAt = {
+            $gte:_times[0],
+            $lte:_times[1]
+        }
+    }
+    if (where.adminName) {
+        where.adminName = { $like:`%${where.adminName}%` }
+    }
+    if (where.email) {
+        where.email = { $like:`%${where.email}%` }
+    }
     const message = {}
     try {
-        const admin = await Admin.getAdminList(parseInt(data.page) - 1, parseInt(data.size), {})
+        const admin = await Admin.getAdminList(parseInt(data.page) - 1, parseInt(data.size), where)
         if (admin) {
             message.code = responseCode.SUCCESS
             message.message = '获取成功'

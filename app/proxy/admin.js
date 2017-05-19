@@ -35,8 +35,8 @@ exports.getAdminByEmail = async(email) => {
  * @returns {Promise.<void>}
  */
 exports.getAdminByWhere = async(where) => {
-    return await Admin.findOne({
-        'include': [ { model: Auth, required: true, as:'Auth'}],
+    return await Admin.findAll({
+        'include': [ { model: Auth, as:'Auth', include:[{ all:true }]}],
          where: where
     })
 }

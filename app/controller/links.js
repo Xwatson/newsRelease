@@ -41,9 +41,21 @@ exports.list = async(ctx) => {
     const data = ctx.query
     if (!data.page) data.page = 1
     if (!data.size) data.size = 10
+    const where = {
+        name:data.name,
+        status:data.status
+    }
+    Object.keys(where).forEach((key) => {
+        if (!where[key]) {
+            delete where[key]
+        }
+    })
+    if (where.name) {
+        where.name = { $like:`%${where.name}%` }
+    }
     const message = {}
     try {
-        const links = await Links.getLinksList({}, parseInt(data.page) - 1, parseInt(data.size))
+        const links = await Links.getLinksList(where, parseInt(data.page) - 1, parseInt(data.size))
         if (links) {
             message.code = responseCode.SUCCESS
             message.message = '获取成功'

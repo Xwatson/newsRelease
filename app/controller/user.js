@@ -7,6 +7,8 @@ const User = require('../proxy/user')
 const Comment = require('../proxy/comment')
 const encipher = require('../common/encipher')
 const upload = require('./upload')
+const moment = require('moment')
+const netWork = require('../common/netWorkInterfaces')
 const errLog = '用户控制器：'
 
 /**
@@ -36,6 +38,10 @@ exports.login = async(ctx) => {
         ctx.body = message
         return ctx
     }
+    await User.updateUser({
+        loginTime:moment().format('YYYY-MM-DD HH:mm:ss'),
+        loginIP:netWork.getIp()
+    }, user.dataValues.id)
     ctx.session.user = user.dataValues
     message.code = responseCode.SUCCESS
     message.message = '登录成功'
@@ -264,9 +270,33 @@ exports.list = async(ctx) => {
     const data = ctx.query
     if (!data.page) data.page = 1
     if (!data.size) data.size = 10
+    const where = {
+        nickName:data.nickName,
+        email:data.email,
+        status:data.status,
+        createdAt:data.createdAt
+    }
+    Object.keys(where).forEach((key) => {
+        if (!where[key]) {
+            delete where[key]
+        }
+    })
+    if (where.createdAt) {
+        const _times = where.createdAt.split('|')
+        where.createdAt = {
+            $gte:_times[0],
+            $lte:_times[1]
+        }
+    }
+    if (where.nickName) {
+        where.nickName = { $like:`%${where.nickName}%` }
+    }
+    if (where.email) {
+        where.email = { $like:`%${where.email}%` }
+    }
     const message = {}
     try {
-        const users = await User.getUserList({}, parseInt(data.page) - 1, parseInt(data.size))
+        const users = await User.getUserList(where, parseInt(data.page) - 1, parseInt(data.size))
         if (users) {
             message.code = responseCode.SUCCESS
             message.message = '获取成功'
@@ -351,16 +381,21 @@ exports.update = async(ctx) => {
                 ctx.body = message
                 return ctx
             }
-            if (user.password !== encipher.getMd5(data.password)) {
-                message.code = responseCode.FAIL
-                message.message = '原始密码不正确'
-                ctx.body = message
-                return ctx
+            let isUpdatePwd = false
+            if (data.password) {
+                isUpdatePwd = true
+                const password = encipher.getMd5(data.password)
+                if (user.dataValues.password !== password) {
+                    message.code = responseCode.FAIL
+                    message.message = '原始密码错误'
+                    ctx.body = message
+                    return ctx
+                }
             }
             user = await User.updateUser({
-                nickName:data.nickName,
-                email:data.email,
-                password:encipher.getMd5(data.new_password),
+                /* nickName:data.nickName,
+                email:data.email, */
+                password:isUpdatePwd ? encipher.getMd5(data.new_password) : user.dataValues.password,
                 status:data.status,
                 name:data.name,
                 phone:data.phone,
@@ -369,9 +404,7 @@ exports.update = async(ctx) => {
                 qq:data.qq,
                 birthday:data.birthday || null,
                 integral:data.integral || null,
-                introduction:data.introduction,
-                loginTime:data.loginTime || null,
-                loginIP:data.loginIP || null
+                introduction:data.introduction
             }, data.id)
             if (!user) {
                 message.code = responseCode.FAIL

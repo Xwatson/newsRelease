@@ -183,9 +183,31 @@ exports.list = async(ctx) => {
     const data = ctx.query
     if (!data.page) data.page = 1
     if (!data.size) data.size = 10
+    const where = {
+        title:data.title,
+        category_id:data.category_id,
+        author:data.author,
+        status:data.status,
+        createdAt:data.createdAt
+    }
+    Object.keys(where).forEach((key) => {
+        if (!where[key]) {
+            delete where[key]
+        }
+    })
+    if (where.createdAt) {
+        const _times = where.createdAt.split('|')
+        where.createdAt = {
+            $gte:_times[0],
+            $lte:_times[1]
+        }
+    }
+    if (where.title) {
+        where.title = { $like:`%${where.title}%` }
+    }
     const message = {}
     try {
-        const news = await News.getNewsList({}, parseInt(data.page) - 1, parseInt(data.size))
+        const news = await News.getNewsList(where, parseInt(data.page) - 1, parseInt(data.size))
         if (news) {
             message.code = responseCode.SUCCESS
             message.message = '获取成功'
