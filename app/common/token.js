@@ -25,13 +25,12 @@ exports.getToken = (_iss, expires) => {
  * @param next
  */
 exports.verifyToken = async(ctx, next) => {
-    await next()
-    return
     const data = ctx.request.body
     const message = {}
     const token = (data && data.authToken) || (ctx.query && ctx.query.authToken) || ctx.headers['authToken']
     if (token) {
         try {
+            // 解密token
             const decoded = jwt.decode(token, jwtTokenSecret)
             if (decoded.exp <= Date.now()) {
                 message.code = responseCode.AUTH_EXPIRED
@@ -39,6 +38,7 @@ exports.verifyToken = async(ctx, next) => {
                 ctx.body = message
                 return ctx
             }
+            // 获取用户id
             ctx.uid = decoded.iss
         } catch (err) {
             message.code = responseCode.AUTH_EXPIRED
