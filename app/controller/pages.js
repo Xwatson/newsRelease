@@ -9,27 +9,27 @@ export async function home(ctx) {
     const site = await getSite(ctx.originalUrl)
     const links = await Links.getLinksByWhere({}, { order:[['sort', 'DESC'],['updatedAt', 'DESC']] })
     // 获取前10个轮播
-    const topCarousel = await News.getNewsByWhere({ is_carousel:true, status:'ENABLED' }, { order: 'updatedAt DESC', limit:10 })
+    const topCarousel = await News.getNewsByWhere({ is_carousel:true, status:'ENABLED' }, { order: 'createdAt DESC', limit:10 })
     // 获取20个最新资讯
-    const newsOptional = await News.getNewsByWhere({ status:'ENABLED' }, { order: 'updatedAt DESC', limit:20 })
+    const newsOptional = await News.getNewsByWhere({ status:'ENABLED' }, { order: 'createdAt DESC', limit:20 })
     // 获取前10点击最高新闻
     const accessNews = await News.getNewsByWhere({ status:'ENABLED' }, { order: 'accessCount DESC', limit:10 })
     // 获取前10条国内新闻
-    const domesticNews = await News.getNewsByWhere({ category_id:4, status:'ENABLED' }, { order: 'updatedAt DESC', limit:10 })
+    const domesticNews = await News.getNewsByWhere({ category_id:4, status:'ENABLED' }, { order: 'createdAt DESC', limit:10 })
     // 获取前10条国际新闻
-    const internationalNews = await News.getNewsByWhere({ category_id:5, status:'ENABLED' }, { order: 'updatedAt DESC', limit:10 })
+    const internationalNews = await News.getNewsByWhere({ category_id:5, status:'ENABLED' }, { order: 'createdAt DESC', limit:10 })
     // 获取前10条军事新闻
-    const militaryNews = await News.getNewsByWhere({ category_id:6, status:'ENABLED' }, { order: 'updatedAt DESC', limit:10 })
+    const militaryNews = await News.getNewsByWhere({ category_id:6, status:'ENABLED' }, { order: 'createdAt DESC', limit:10 })
     // 获取前10条社会新闻
-    const societyNews = await News.getNewsByWhere({ category_id:7, status:'ENABLED' }, { order: 'updatedAt DESC', limit:10 })
+    const societyNews = await News.getNewsByWhere({ category_id:7, status:'ENABLED' }, { order: 'createdAt DESC', limit:10 })
     // 获取前10条科技新闻
-    const technologyNews = await News.getNewsByWhere({ category_id:1, status:'ENABLED' }, { order: 'updatedAt DESC', limit:10 })
+    const technologyNews = await News.getNewsByWhere({ category_id:1, status:'ENABLED' }, { order: 'createdAt DESC', limit:10 })
     // 获取前10条娱乐新闻
-    const entertainmentNews = await News.getNewsByWhere({ category_id:8, status:'ENABLED' }, { order: 'updatedAt DESC', limit:10 })
+    const entertainmentNews = await News.getNewsByWhere({ category_id:8, status:'ENABLED' }, { order: 'createdAt DESC', limit:10 })
     // 获取前10条财经新闻
-    const financeNews = await News.getNewsByWhere({ category_id:9, status:'ENABLED' }, { order: 'updatedAt DESC', limit:10 })
+    const financeNews = await News.getNewsByWhere({ category_id:9, status:'ENABLED' }, { order: 'createdAt DESC', limit:10 })
     // 获取前10条体育新闻
-    const sportsNews = await News.getNewsByWhere({ category_id:10, status:'ENABLED' }, { order: 'updatedAt DESC', limit:10 })
+    const sportsNews = await News.getNewsByWhere({ category_id:10, status:'ENABLED' }, { order: 'createdAt DESC', limit:10 })
     return await ctx.render('home', {
         ...site,
         user:ctx.session.user,
@@ -56,7 +56,7 @@ export async function category(ctx) {
     const router = `/${ctx.params.category}`
     const site = await getSite(router)
     const currentCate = site.category.find((f) => f.router === router )
-    const news = await News.getNewsListNoCategory({ category_id:currentCate.id }, data.page, data.size, { order:'updatedAt DESC' })
+    const news = await News.getNewsListNoCategory({ category_id:currentCate.id }, data.page, data.size, { order:'createdAt DESC' })
     console.log(news)
     return await ctx.render('category', {
         ...site,
@@ -110,7 +110,7 @@ export async function search(ctx) {
         $or:[{title:{ $like:`%${data.key}%` }}, {keyWords:{ $like:`%${data.key}%` }}, {summary:{ $like:`%${data.key}%` }}] },
         data.page,
         data.size,
-        { order:'updatedAt DESC' })
+        { order:'createdAt DESC' })
     const router = `/${ctx.params.category}`
     const site = await getSite(router)
     const currentCate = site.category.find((f) => f.router === router )
