@@ -15,6 +15,14 @@ exports.getLinksByName = async(name) => {
     })
 }
 
+exports.getLinksByWhere = async(where, options) => {
+    options = options || {}
+    return await Links.findAll({
+        where:where,
+        ...options
+    })
+}
+
 /**
  * 根据id获取
  * @param id

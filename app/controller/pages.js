@@ -2,10 +2,12 @@ const SiteConfig = require('../proxy/siteConfig')
 const Category = require('../proxy/category')
 const News = require('../proxy/news')
 const Comment = require('../proxy/comment')
+const Links = require('../proxy/links')
 const moment = require('moment')
 // 首页
 export async function home(ctx) {
     const site = await getSite(ctx.originalUrl)
+    const links = await Links.getLinksByWhere({}, { order:[['sort', 'DESC'],['updatedAt', 'DESC']] })
     // 获取前10个轮播
     const topCarousel = await News.getNewsByWhere({ is_carousel:true, status:'ENABLED' }, { order: 'updatedAt DESC', limit:10 })
     // 获取20个最新资讯
@@ -42,6 +44,7 @@ export async function home(ctx) {
         entertainmentNews:entertainmentNews,
         financeNews:financeNews,
         sportsNews:sportsNews,
+        links:links,
         title:`首页-${site.title}`
     })
 }

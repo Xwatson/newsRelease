@@ -307,6 +307,17 @@
         <div class="col-xs-12 col-lg-12 news-banner-lg">
             <img src="/images/bannerC.jpg" alt="">
         </div>
+        <div class="col-xs-12 news-links">
+            <div class="page-header">
+                <h5 style="color: #999">友情链接</h5>
+            </div>
+            <h5 style="color: #999"></h5>
+            <% links.forEach((item) => { %>
+                <div class="col-xs-3">
+                   <p><a href="<%= item.url %>" target="_blank"><%= item.name %></a></p>
+                </div>
+            <% }) %>
+        </div>
     </div>
 
     <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
@@ -324,5 +335,4 @@
     </div>
 </div>
 
-<hr>
 <% include footer %>

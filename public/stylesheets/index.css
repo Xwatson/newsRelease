@@ -284,3 +284,19 @@
 .na-right > div{
     display: none;
 }
+.news-footer{
+    font-size: 12px;
+    color: #cccccc;
+    text-align: center;
+    width: 80%;
+    margin: 10px auto;
+}
+.news-links .col-xs-3 > p{
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.news-links .col-xs-3 > p a{
+    color: #cccccc;
+}
