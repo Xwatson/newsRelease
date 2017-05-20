@@ -6,7 +6,7 @@
   "imageCompressEnable": true,
   "imageCompressBorder": 1600,
   "imageInsertAlign": "none",
-  "imageUrlPrefix": "http://localhost:3000/",
+  "imageUrlPrefix": "http://139.129.21.97:3000/",
   "imagePathFormat": "uploads/editor/{yyyy}{mm}{dd}/{time}{rand:6}",
 
   "scrawlActionName": "uploadscrawl",
