@@ -83,12 +83,14 @@ exports.updateNews = async(news, id) => {
  * @param size
  * @returns {Promise.<menu>}
  */
-exports.getNewsList= async(where, page, size) => {
+exports.getNewsList= async(where, page, size, options) => {
+    options = options || {}
     return await News.findAndCountAll({
         include:[{ model: Category, required: true, as:'Category'}],
         where:where,
         offset:page,
-        limit:size
+        limit:size,
+        ...options
     })
 }
 /**
