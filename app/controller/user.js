@@ -161,7 +161,7 @@ exports.updateHeadPortrait = async(ctx) => {
         return ctx
     }
     let user = await User.updateUser({
-        headPortrait:file ? file.path : '/images/user-default.png'
+        headPortrait:file ? `/${file.path}` : '/images/user-default.png'
     }, ctx.session.user.id)
     if (user) {
         message.code = responseCode.SUCCESS
