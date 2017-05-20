@@ -49,11 +49,12 @@ export async function home(ctx) {
 export async function category(ctx) {
     const data = ctx.query
     data.page = data.page ? data.page -1 : 0
+    data.size = data.size || 20
     const router = `/${ctx.params.category}`
     const site = await getSite(router)
     const currentCate = site.category.find((f) => f.router === router )
-    const news = await News.getNewsListNoCategory({ category_id:currentCate.id }, data.page, data.size || 20, { order:'updatedAt DESC' })
-
+    const news = await News.getNewsListNoCategory({ category_id:currentCate.id }, data.page, data.size, { order:'updatedAt DESC' })
+    console.log(news)
     return await ctx.render('category', {
         ...site,
         moment:moment,
@@ -101,10 +102,11 @@ export async function search(ctx) {
         return ctx
     }
     data.page = data.page ? data.page -1 : 0
+    data.size = data.size || 20
     const news = await News.getNewsListNoCategory({
         $or:[{title:{ $like:`%${data.key}%` }}, {keyWords:{ $like:`%${data.key}%` }}, {summary:{ $like:`%${data.key}%` }}] },
         data.page,
-        data.size || 20,
+        data.size,
         { order:'updatedAt DESC' })
     const router = `/${ctx.params.category}`
     const site = await getSite(router)
@@ -151,21 +153,22 @@ export async function account(ctx) {
 // 设置分页
 const getPagin = (news, data) => {
     const paging = []
-    if (news.count < 6) {
-        for (let i = 0; i < news.count; i++) {
+    const total = parseInt((news.count  +  data.size  - 1) / data.size)
+    if (total < 6) {
+        for (let i = 0; i < total; i++) {
             paging.push({ page:i + 1, current:i === data.page })
         }
     } else {
         if (data.page > 2) {
-            for (let i = data.page - 2; i < news.count; i++) {
+            for (let i = data.page - 2; i < total; i++) {
                 if (i - (data.page - 2) > 5) {
                     paging.push({ page:'...', current:false })
-                    paging.push({ page:news.count, current:false })
+                    paging.push({ page:total, current:false })
                     break
                 }
                 paging.push({ page:i + 1, current:i === data.page })
             }
-            if (news.count - 5 > 0 ) {
+            if (total - 5 > 0 ) {
                 paging.unshift({ page:'...', current:false })
                 paging.unshift({ page:1, current:false })
             }
@@ -174,7 +177,7 @@ const getPagin = (news, data) => {
                 paging.push({ page:i + 1, current:i === data.page })
             }
             paging.push({ page:'...', current:false })
-            paging.push({ page:news.count, current:false })
+            paging.push({ page:total, current:false })
         }
     }
     return paging
