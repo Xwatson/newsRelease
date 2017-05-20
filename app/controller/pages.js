@@ -6,7 +6,7 @@ const Links = require('../proxy/links')
 const moment = require('moment')
 // 首页
 export async function home(ctx) {
-    const site = await getSite(ctx.originalUrl)
+    const site = await getSite(ctx.originalUrl, ctx.siteConfig)
     const links = await Links.getLinksByWhere({}, { order:[['sort', 'DESC'],['updatedAt', 'DESC']] })
     // 获取前10个轮播
     const topCarousel = await News.getNewsByWhere({ is_carousel:true, status:'ENABLED' }, { order: 'createdAt DESC', limit:10 })
@@ -54,7 +54,7 @@ export async function category(ctx) {
     data.page = data.page ? data.page -1 : 0
     data.size = data.size || 20
     const router = `/${ctx.params.category}`
-    const site = await getSite(router)
+    const site = await getSite(router, ctx.siteConfig)
     const currentCate = site.category.find((f) => f.router === router )
     const news = await News.getNewsListNoCategory({ category_id:currentCate.id }, data.page, data.size, { order:'createdAt DESC' })
     console.log(news)
@@ -85,7 +85,7 @@ export async function details(ctx) {
             await News.updateNews({ accessCount:news.accessCount + 1 }, news.id)
         }
     }
-    const site = await getSite(router)
+    const site = await getSite(router, ctx.siteConfig)
     const currentCate = site.category.find((f) => f.router === router )
     return await ctx.render('details', {
         ...site,
@@ -112,7 +112,7 @@ export async function search(ctx) {
         data.size,
         { order:'createdAt DESC' })
     const router = `/${ctx.params.category}`
-    const site = await getSite(router)
+    const site = await getSite(router, ctx.siteConfig)
     const currentCate = site.category.find((f) => f.router === router )
 
     return await ctx.render('search', {
@@ -143,7 +143,7 @@ export async function account(ctx) {
         ctx.redirect('/')
         return ctx
     }
-    const site = await getSite('/')
+    const site = await getSite('/', ctx.siteConfig)
     return await ctx.render('account', {
         ...site,
         moment:moment,
@@ -151,7 +151,12 @@ export async function account(ctx) {
         title:`个人中心`
     })
 }
-
+export async function maintain(ctx) {
+    return await ctx.render('maintain', {})
+}
+export async function close(ctx) {
+    return await ctx.render('close', {})
+}
 
 // 设置分页
 const getPagin = (news, data) => {
@@ -214,10 +219,12 @@ const nav = (nav) => {
         }
     })
 }
-
-export async function getSite(url) {
+// 获取站点配置
+export async function getSiteConfig() {
+    return await SiteConfig.getConfig()
+}
+export async function getSite(url, site) {
     url = url.substr(0, url.indexOf('?') > -1 ? url.indexOf('?') : url.length) || '/'
-    const site = await SiteConfig.getConfig()
     const category = await Category.getCategoryByWhere({ is_nav:true, status:'ENABLED' })
     category.map((item, i) => {
         category[i] = item.dataValues
