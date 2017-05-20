@@ -207,7 +207,7 @@ exports.list = async(ctx) => {
     }
     const message = {}
     try {
-        const news = await News.getNewsList(where, parseInt(data.page) - 1, parseInt(data.size))
+        const news = await News.getNewsList(where, parseInt(data.page) - 1, parseInt(data.size), { order:'updatedAt DESC' })
         if (news) {
             message.code = responseCode.SUCCESS
             message.message = '获取成功'
