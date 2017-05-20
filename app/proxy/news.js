@@ -21,7 +21,11 @@ exports.getNewsByName = async(name) => {
  */
 exports.getNewsByWhere = async(where, options) => {
     options = options || {}
-    return await News.findAll({ where:where, ...options })
+    return await News.findAll({
+        where:where,
+        ...options,
+        include:[{ model: Category, required: true, as:'Category'}]
+    })
 }
 
 /**

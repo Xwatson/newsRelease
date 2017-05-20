@@ -49,12 +49,14 @@ exports.getCommentByUserId = async(id) => {
  * @param id
  * @returns {Promise.<void>}
  */
-exports.getCommentByNewsId = async(id, options) => {
+exports.getCommentByNewsId = async(id, options, where) => {
+    options = options || {}
+    where = where || {}
     return await Comment.findAll({
         include:[
             { model: User, as:'User'}
         ],
-        where:{ news_id:id },
+        where:{ news_id:id, ...where },
         ...options
     })
 }

@@ -68,6 +68,10 @@
                 </div>
             </div>
         </div>
+        <% } else { %>
+        <div class="col-sm-12" style="text-align: center; color: #ccc">
+            <h4>新闻不存在或已被删除</h4>
+        </div>
         <% } %>
     </div>
 </div>
@@ -79,10 +83,11 @@
     $('#comment-submit').on('click', function () {
         var content = $('#comment-text').val()
         if ($.trim(content) !== '') {
+            var pathname = window.location.pathname
             $.ajax({
                 url:'/comment/submit',
                 type:'post',
-                data:{ news_id:1, content:content },
+                data:{ news_id:pathname.substr(pathname.lastIndexOf('/') + 1), content:content },
                 success:function (data) {
                     if (data.code === 1) {
                         alert('评论成功')

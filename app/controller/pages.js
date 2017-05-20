@@ -7,27 +7,27 @@ const moment = require('moment')
 export async function home(ctx) {
     const site = await getSite(ctx.originalUrl)
     // 获取前10个轮播
-    const topCarousel = await News.getNewsByWhere({ is_carousel:true }, { order: 'updatedAt DESC', limit:10 })
+    const topCarousel = await News.getNewsByWhere({ is_carousel:true, status:'ENABLED' }, { order: 'updatedAt DESC', limit:10 })
     // 获取20个最新资讯
-    const newsOptional = await News.getNewsByWhere({}, { order: 'updatedAt DESC', limit:20 })
+    const newsOptional = await News.getNewsByWhere({ status:'ENABLED' }, { order: 'updatedAt DESC', limit:20 })
     // 获取前10点击最高新闻
-    const accessNews = await News.getNewsByWhere({}, { order: 'accessCount DESC', limit:10 })
+    const accessNews = await News.getNewsByWhere({ status:'ENABLED' }, { order: 'accessCount DESC', limit:10 })
     // 获取前10条国内新闻
-    const domesticNews = await News.getNewsByWhere({ category_id:4 }, { order: 'updatedAt DESC', limit:10 })
+    const domesticNews = await News.getNewsByWhere({ category_id:4, status:'ENABLED' }, { order: 'updatedAt DESC', limit:10 })
     // 获取前10条国际新闻
-    const internationalNews = await News.getNewsByWhere({ category_id:5 }, { order: 'updatedAt DESC', limit:10 })
+    const internationalNews = await News.getNewsByWhere({ category_id:5, status:'ENABLED' }, { order: 'updatedAt DESC', limit:10 })
     // 获取前10条军事新闻
-    const militaryNews = await News.getNewsByWhere({ category_id:6 }, { order: 'updatedAt DESC', limit:10 })
+    const militaryNews = await News.getNewsByWhere({ category_id:6, status:'ENABLED' }, { order: 'updatedAt DESC', limit:10 })
     // 获取前10条社会新闻
-    const societyNews = await News.getNewsByWhere({ category_id:7 }, { order: 'updatedAt DESC', limit:10 })
+    const societyNews = await News.getNewsByWhere({ category_id:7, status:'ENABLED' }, { order: 'updatedAt DESC', limit:10 })
     // 获取前10条科技新闻
-    const technologyNews = await News.getNewsByWhere({ category_id:1 }, { order: 'updatedAt DESC', limit:10 })
+    const technologyNews = await News.getNewsByWhere({ category_id:1, status:'ENABLED' }, { order: 'updatedAt DESC', limit:10 })
     // 获取前10条娱乐新闻
-    const entertainmentNews = await News.getNewsByWhere({ category_id:8 }, { order: 'updatedAt DESC', limit:10 })
+    const entertainmentNews = await News.getNewsByWhere({ category_id:8, status:'ENABLED' }, { order: 'updatedAt DESC', limit:10 })
     // 获取前10条财经新闻
-    const financeNews = await News.getNewsByWhere({ category_id:9 }, { order: 'updatedAt DESC', limit:10 })
+    const financeNews = await News.getNewsByWhere({ category_id:9, status:'ENABLED' }, { order: 'updatedAt DESC', limit:10 })
     // 获取前10条体育新闻
-    const sportsNews = await News.getNewsByWhere({ category_id:10 }, { order: 'updatedAt DESC', limit:10 })
+    const sportsNews = await News.getNewsByWhere({ category_id:10, status:'ENABLED' }, { order: 'updatedAt DESC', limit:10 })
     return await ctx.render('home', {
         ...site,
         user:ctx.session.user,
@@ -71,10 +71,11 @@ export async function details(ctx) {
     let comment = null
     let router = ''
     if (id) {
-        news = await News.getNewsById(id)
+        news = await News.getNewsByWhere({ id:id, status:'ENABLED' })
+        news = news[0]
         if (news) {
             news = news.dataValues
-            comment = await Comment.getCommentByNewsId(id, { order:'createdAt ASC' })
+            comment = await Comment.getCommentByNewsId(id, { order:'createdAt ASC' }, { status:'PASS' })
             router = `/${news.Category.name}`
             // 增加访问量
             await News.updateNews({ accessCount:news.accessCount + 1 }, news.id)
