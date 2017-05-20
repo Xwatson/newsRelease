@@ -27,10 +27,6 @@ exports.getToken = (_iss, expires) => {
 exports.verifyToken = async(ctx, next) => {
     const data = ctx.request.body
     const message = {}
-    // 获取编辑器配置 跳过权限验证
-    if (ctx.originalUrl.indexOf('editor/upload') > -1 && ctx.query.action === 'config') {
-        return await next()
-    }
     const token = (data && data.authToken) || (ctx.query && ctx.query.authToken) || ctx.headers['authToken']
     if (token) {
         try {
