@@ -61,7 +61,8 @@ exports.update = async(ctx) => {
                 router:data.router,
                 icon:data.icon,
                 // sort:Menu.max('sort', { where:{ parent_id:data.parent_id || 0 } }), 不修改排序
-                parent_id:data.parent_id || 0
+                parent_id:data.parent_id || 0,
+                status:data.status
             }, data.id)
             if (meun) {
                 message.code = responseCode.SUCCESS
