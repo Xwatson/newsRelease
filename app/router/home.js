@@ -7,6 +7,10 @@ const router = new Router()
 import { home, category, details, login, register, search, account, maintain, close, getSiteConfig } from '../controller/pages'
 
 router.get('/*', async(ctx, next) => {
+    // 后台接口通过验证
+    if (ctx.originalUrl.indexOf('/news_admin') > -1) {
+        return await next()
+    }
     const site = await getSiteConfig()
     if (site.status === 'MAINTAIN') {
         return await ctx.render('maintain', {})
