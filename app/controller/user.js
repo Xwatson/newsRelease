@@ -212,7 +212,7 @@ exports.register = async(ctx) => {
             address:data.address || null,
             qq:data.qq || null,
             birthday:data.birthday || null,
-            headPortrait:file.path ? `/${file.path}` : null,
+            headPortrait:file ? `/${file.path}` : null,
             integral:0,
             introduction:data.introduction || null,
             loginTime:data.loginTime || null,
