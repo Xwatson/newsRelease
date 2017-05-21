@@ -50,7 +50,7 @@ exports.create = async(ctx) => {
     const data = ctx.request.body
     const message = {}
     try {
-        let adminInfo = await Admin.getAdminByWhere({'$or':[{ adminName:data.adminName }, { email:data.email }] })
+        let adminInfo = await Admin.getAdminByWhere({'$or':[{ adminName:data.adminName }, { email:data.email }] })[0]
         if (adminInfo) {
             if ((!adminInfo.dataValues.adminName || adminInfo.dataValues.adminName !== '') && adminInfo.dataValues.adminName === data.name) {
                 message.code = responseCode.FAIL
