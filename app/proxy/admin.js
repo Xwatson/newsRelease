@@ -46,11 +46,10 @@ exports.getAdminByWhere = async(where) => {
  */
 exports.getAdminById = async(id) => {
     return await Admin.findOne({
-        'include': [ { model: Auth, required: true, as:'Auth'}]
-    }, {
         where: {
             id: id
-        }
+        },
+        'include': [ { model: Auth, required: true, as:'Auth'}]
     })
 }
 /**

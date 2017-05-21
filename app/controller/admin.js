@@ -116,7 +116,7 @@ exports.update = async(ctx) => {
             }
             if (getAdmin.dataValues.adminName !== data.adminName) {
                 let admin = await Admin.getAdminByWhere({ adminName:data.adminName })//{'$or':[{ adminName:data.name }, { email:data.email }] })
-                if (admin) {
+                if (admin.length) {
                     message.code = responseCode.FAIL
                     message.message = '账户已存在'
                     ctx.body = message
