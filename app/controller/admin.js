@@ -18,7 +18,7 @@ exports.login = async(ctx) => {
     const data = ctx.request.body
     const message = {}
     let adminInfo = await Admin.getAdminByWhere({ adminName:data.name, status:'ENABLED' })
-    if (!adminInfo) {
+    if (!adminInfo.length) {
         message.code = responseCode.FAIL
         message.message = '账户不存在'
         ctx.body = message

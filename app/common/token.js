@@ -49,7 +49,7 @@ exports.verifyToken = async(ctx, next) => {
         await next()
     } else {
         message.code = responseCode.AUTH_EXPIRED
-        message.message = '登录超时'
+        message.message = '请重新登录'
         ctx.body = message
         return ctx
     }

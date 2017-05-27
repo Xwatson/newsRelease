@@ -15,12 +15,15 @@ onerror(app)
 
 // middlewares
 // app.use(convert(Bodyparser()))
+// 使用session
 app.use(session({
     key: "NEWS_RELEASE_SESSION"
 }))
+// 转换body 数据请求参数转换
 app.use(convert(body()))
 app.use(convert(json()))
 app.use(convert(logger()))
+// 设置静态目录
 app.use(convert(require('koa-static')(__dirname + '/public')))
 
 // 设置Header，这个header会输出给浏览器客户端，表明这个框架是什么生成的，可以自行修改
@@ -34,7 +37,7 @@ app.use(async(ctx, next) => {
     }
     return await next()
 })
-
+// 设置模板引擎
 app.use(views(__dirname + '/app/views', {
   extension: 'ejs'
 }))
@@ -49,13 +52,13 @@ app.use(async (ctx, next) => {
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
 })
 
-
+// 处理404
 app.use(async(ctx) => {
     if (ctx.status === 404) {
         await ctx.render('error/404');
     }
 })
-
+// 监听错误
 app.on('error', function(err, ctx){
   console.log('server error', err, ctx)
 })
