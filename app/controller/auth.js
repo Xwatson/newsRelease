@@ -117,6 +117,12 @@ exports.delete = async(ctx) => {
             ctx.body = message
             return ctx
         }
+        if (auth.dataValues.name === '超级管理员') {
+            message.code = responseCode.FAIL
+            message.message = '超级管理员不可删除'
+            ctx.body = message
+            return ctx
+        }
         await auth.setAuthOperation([])
         await auth.setAuthMenu([])
         auth = await auth.destroy()
