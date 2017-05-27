@@ -114,6 +114,12 @@ exports.update = async(ctx) => {
                 ctx.body = message
                 return ctx
             }
+            if (getAdmin.dataValues.adminName === 'admin') {
+                message.code = responseCode.FAIL
+                message.message = '超级管理员不可修改'
+                ctx.body = message
+                return ctx
+            }
             if (getAdmin.dataValues.adminName !== data.adminName) {
                 let admin = await Admin.getAdminByWhere({ adminName:data.adminName })//{'$or':[{ adminName:data.name }, { email:data.email }] })
                 if (admin.length) {
