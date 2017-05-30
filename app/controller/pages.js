@@ -56,7 +56,7 @@ export async function category(ctx) {
     const router = `/${ctx.params.category}`
     const site = await getSite(router, ctx.siteConfig)
     const currentCate = site.category.find((f) => f.router === router )
-    const news = await News.getNewsListNoCategory({ category_id:currentCate.id, status:'PASS' }, data.page, data.size, { order:'createdAt DESC' })
+    const news = await News.getNewsListNoCategory({ category_id:currentCate.id, status:'ENABLED' }, data.page, data.size, { order:'createdAt DESC' })
     console.log(news)
     return await ctx.render('category', {
         ...site,

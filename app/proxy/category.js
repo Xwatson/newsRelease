@@ -117,5 +117,5 @@ exports.getCategorys= async(where ,page, size) => {
 }
 
 exports.getCategoryByWhere = async(where) => {
-    return await Category.findAll(where)
+    return await Category.findAll({ where:where })
 }
