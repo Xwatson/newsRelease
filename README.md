@@ -2,16 +2,6 @@
 > 新闻发布系统服务端，实现管理员的所有功能，提供service api和web页面模式。<br/>
 service api主要提供给前端管理系统，web页面提供新闻展示界面等。<br/>
 技术方面采用nodejs开发web服务端，基于koa2框架，使用sequelize ORM框架操作mysql数据库。
-### koa介绍
-> koa由 Express 原班人马打造的 koa，<br />
-> 一个轻量优雅的中间件框架，几乎所有的功能都需要由第三方中间件完成<br />
-> koa通过组合不同的generator，可以繁琐的回调函数嵌套，极大地提升错误处理的效率<br />
-> koa2支持ES7 async/await 函数
-
-### sequelize介绍
-> Sequelize是一个基于promise的关系型数据库ORM框架。<br/>
-Sequelize是在SQL之上进行抽象、封装，我们可以使用面向对象的方式来操作表，功能丰富，
-可以非常方便的进行连表查询，事务等操作，从而提高开发效率。
 
 ### 数据库配置
 - config/database.json文件
